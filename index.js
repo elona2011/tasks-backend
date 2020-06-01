@@ -22,10 +22,11 @@ router.get('/wx', (ctx, next) => {
     }
 });
 
-app.use(async function(ctx,next){
-    const str = ':method ":url"'
-      .replace(':method', ctx.method)
-      .replace(':url', ctx.url);
+app.use(async function (ctx, next) {
+    const str = `:method*****:url*****:body`
+        .replace(':method', ctx.method)
+        .replace(':url', ctx.url)
+        .replace(':body', ctx.request.body)
 
     console.log(str);
     await next()
