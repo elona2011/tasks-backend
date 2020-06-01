@@ -3,22 +3,23 @@ const Koa = require('koa');
 const xmlParser = require('koa-xml-body')
 const Router = require("@koa/router")
 const { createHash } = require('crypto');
+const xml2js=require("xml2js")
 
 const app = new Koa();
 const router = new Router();
 
-app.context.getXmlValue = function(field){
+app.context.getXmlValue = function (field) {
     if (!this.xmlData) return
     return this.xmlData[field][0]
 }
-app.context.getOpenId = function() {
+app.context.getOpenId = function () {
     if (this.openId) return this.openId
     let openId = this.openId = this.getXmlValue("FromUserName")
     return openId
 }
-app.context.xmlBuilder = new xml2js.Builder({headless: true, cdata:true, rootName: "xml"});
+app.context.xmlBuilder = new xml2js.Builder({ headless: true, cdata: true, rootName: "xml" });
 
-router.get('/wx', (ctx, next) => {
+router.get('/wx', async (ctx, next) => {
     // ctx.router available
     let body = ctx.request.body
     let xmlData = body.xml
