@@ -22,6 +22,7 @@ router.get('/wx', (ctx, next) => {
     }
 });
 
+app.use(xmlParser())
 app.use(async function (ctx, next) {
     const str = `:method*****:url*****:body`
         .replace(':method', ctx.method)
@@ -33,7 +34,7 @@ app.use(async function (ctx, next) {
 })
 app.use(router.routes())
     .use(router.allowedMethods());
-app.use(xmlParser())
+
 // response
 app.use(ctx => {
     ctx.body = 'Hello Koa';
