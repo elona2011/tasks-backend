@@ -1,3 +1,4 @@
+const { port, token } = require('./config')
 const Koa = require('koa');
 const xmlParser = require('koa-xml-body')
 const Router = require("@koa/router")
@@ -8,7 +9,6 @@ const router = new Router();
 
 router.get('/wx', (ctx, next) => {
     let { echostr, timestamp, nonce, signature } = ctx.request.query
-    let token = "wtftoken"
     let arr = [token, timestamp, nonce]
     arr.sort()
     let str = arr.join("")
@@ -40,7 +40,7 @@ app.use(ctx => {
     ctx.body = 'Hello Koa';
 });
 
-app.listen(3000, function () {
+app.listen(port, function () {
     console.log("koa listen in 80")
 });
 
