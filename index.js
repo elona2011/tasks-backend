@@ -1,13 +1,15 @@
-const { port, token } = require('./config')
+const { port, token, staticPath } = require('./config')
 const Koa = require('koa');
 const xmlParser = require('koa-xml-body')
 const Router = require("@koa/router")
 const { createHash } = require('crypto');
 const xml2js = require("xml2js")
+const serve = require('koa-static');
 
 const app = new Koa();
 const router = new Router();
 
+app.use(serve(staticPath))
 app.context.getXmlValue = function (field) {
     if (!this.xmlData) return
     return this.xmlData[field][0]
