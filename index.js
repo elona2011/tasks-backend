@@ -22,6 +22,14 @@ router.get('/wx', (ctx, next) => {
     }
 });
 
+app.use(async function(ctx,next){
+    const str = ':method ":url"'
+      .replace(':method', ctx.method)
+      .replace(':url', ctx.url);
+
+    console.log(str);
+    await next()
+})
 app.use(router.routes())
     .use(router.allowedMethods());
 app.use(xmlParser())
