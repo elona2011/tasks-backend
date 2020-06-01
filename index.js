@@ -3,7 +3,7 @@ const Koa = require('koa');
 const xmlParser = require('koa-xml-body')
 const Router = require("@koa/router")
 const { createHash } = require('crypto');
-const xml2js=require("xml2js")
+const xml2js = require("xml2js")
 
 const app = new Koa();
 const router = new Router();
@@ -64,11 +64,12 @@ app.use(router.routes())
     .use(router.allowedMethods());
 
 // response
-app.use(ctx => {
+app.use(async (ctx, next) => {
     ctx.body = {
         Content: 'aaab',
         MsgType: 'text'
     };
+    await next()
 });
 
 app.listen(port, function () {
