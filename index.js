@@ -19,13 +19,14 @@ app.context.getOpenId = function () {
 }
 app.context.xmlBuilder = new xml2js.Builder({ headless: true, cdata: true, rootName: "xml" });
 
-router.get('/wx', async (ctx, next) => {
+router.post('/wx', async (ctx, next) => {
     // ctx.router available
     let body = ctx.request.body
     let xmlData = body.xml
     ctx.xmlData = xmlData
     let type = ctx.getXmlValue("MsgType")
     ctx.msgType = type
+    console.log(`xml:${JSON.stringify(body.xml)}`)
     await next()
     console.log('res body', ctx.body)
     let userOpenId = xmlData.FromUserName[0]
@@ -51,6 +52,9 @@ router.get('/wx', async (ctx, next) => {
 });
 
 app.use(xmlParser())
+app.use(router.routes())
+    .use(router.allowedMethods());
+
 app.use(async function (ctx, next) {
     const str = `:method*****:url*****:body`
         .replace(':method', ctx.method)
@@ -60,16 +64,13 @@ app.use(async function (ctx, next) {
     console.log(str);
     await next()
 })
-app.use(router.routes())
-    .use(router.allowedMethods());
 
 // response
-app.use(async (ctx, next) => {
+app.use(async ctx => {
     ctx.body = {
-        Content: 'aaab',
+        Content: '<a href="https://007.qq.com">显示文字</a>',
         MsgType: 'text'
     };
-    await next()
 });
 
 app.listen(port, function () {
