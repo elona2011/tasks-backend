@@ -70,7 +70,7 @@ app.use(async function (ctx, next) {
 // response
 app.use(async ctx => {
     ctx.body = {
-        Content: '<a href="http://47.113.186.242">显示文字</a>',
+        Content: '<a href="http://tasks.yankaize.com">点击显示关注、点赞任务</a>',
         MsgType: 'text'
     };
 });
