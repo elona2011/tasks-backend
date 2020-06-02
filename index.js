@@ -70,7 +70,7 @@ app.use(async function (ctx, next) {
 // response
 app.use(async ctx => {
     ctx.body = {
-        Content: '<a href="https://007.qq.com">显示文字</a>',
+        Content: '<a href="http://47.113.186.242">显示文字</a>',
         MsgType: 'text'
     };
 });
