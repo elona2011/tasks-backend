@@ -19,8 +19,8 @@ module.exports = router => {
         let body = ctx.request.body
         let xmlData = body.xml
         ctx.xmlData = xmlData
-        ctx.msgType = ctx.getXmlValue("MsgType")
-        ctx.Content = ctx.getXmlValue("Content")
+        ctx.msgType = getXmlValue(ctx, "MsgType")
+        ctx.Content = getXmlValue(ctx, "Content")
         let userOpenId = xmlData.FromUserName[0]
         ctx.jwtToken = jwt.sign({ userOpenId }, jwt_key)
         console.log(`jwtToken:${ctx.jwtToken}`)
