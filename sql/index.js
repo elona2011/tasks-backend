@@ -28,7 +28,7 @@ const init = () => {
                         dy_id varchar(50) default '',\
                         access_token varchar(1000) default '',\
                         login_num int default 1,\
-                        last_login_time DATETIME,\
+                        last_login_time DATETIME DEFAULT CURRENT_TIMESTAMP,\
                         is_subscribe BOOL default true\
                     );`, function (error, results, fields) {
             if (error) throw error;

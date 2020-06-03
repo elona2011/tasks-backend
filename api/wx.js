@@ -1,6 +1,7 @@
 const xml2js = require("xml2js")
 const jwt = require('jsonwebtoken')
 const { jwt_key } = require('../config')
+const { addUser, getToken } = require('../sql/wx')
 
 const getXmlValue = function (ctx, field) {
     if (!ctx.xmlData) return
@@ -22,7 +23,18 @@ module.exports = router => {
         ctx.msgType = getXmlValue(ctx, "MsgType")
         ctx.Content = getXmlValue(ctx, "Content")
         let userOpenId = xmlData.FromUserName[0]
-        ctx.jwtToken = jwt.sign({ userOpenId }, jwt_key)
+        try {
+            let result = await getToken(userOpenId)
+            if (result.length >= 1) {
+                ctx.jwtToken = result[0].jwt
+            } else {
+                ctx.jwtToken = jwt.sign({ userOpenId }, jwt_key)
+                await addUser(userOpenId, ctx.jwtToken)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
         console.log(`jwtToken:${ctx.jwtToken}`)
         console.log(`xml:${JSON.stringify(body.xml)}`)
         await next()
