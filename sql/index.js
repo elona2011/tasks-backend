@@ -40,6 +40,7 @@ const init = () => {
             wx_openid varchar(100) default '',\
             dy_openid varchar(100) default '',\
             access_token varchar(1000) default '',\
+            task_content text,\
             url text,\
             follow_num int,\
             thumb_num int,\
@@ -53,10 +54,10 @@ const init = () => {
             id int AUTO_INCREMENT PRIMARY KEY,\
             task_content text,\
             task_url text,\
-            task_type int,\
+            task_type varchar(50),\
             task_num int,\
-            task_used_num int,\
-            task_finish_num int,\
+            task_used_num int default 0,\
+            task_finish_num int default 0,\
             dy_openid varchar(100) default '',\
             access_token varchar(1000) default ''\
         );`, function (error, results, fields) {
@@ -68,7 +69,7 @@ const init = () => {
             id int AUTO_INCREMENT PRIMARY KEY,\
             wx_openid varchar(100) default '',\
             table_task_id int,\
-            task_type int,\
+            task_type varchar(50),\
             task_state int,\
             dy_id varchar(50) default '',\
             dy_name varchar(50) default '',\

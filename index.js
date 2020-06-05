@@ -3,17 +3,23 @@ const Koa = require('koa');
 const xmlParser = require('koa-xml-body')
 const { createHash } = require('crypto');
 const serve = require('koa-static');
-const router = require('./api')
+const apiRouter = require('./routes/api')
+const wxRouter = require('./routes/wx')
 const { init } = require('./sql')
 const response = require('./middleware/response')
+const bodyParser = require('koa-bodyparser');
 
 init()
 const app = new Koa();
 
 app.use(serve(staticPath))
-app.use(xmlParser())
-app.use(router.routes())
-    .use(router.allowedMethods());
+app.use(bodyParser({
+    enableTypes: ['json', 'xml']
+}))
+app.use(apiRouter.routes())
+app.use(apiRouter.allowedMethods());
+app.use(wxRouter.routes())
+app.use(wxRouter.allowedMethods());
 
 app.use(async function (ctx, next) {
     const str = `:method*****:url*****:body`
