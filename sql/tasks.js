@@ -60,7 +60,10 @@ module.exports = {
         return new Promise((res, rej) => {
             pool.query(`update table_user_task set task_state=2 where id=${id}`, function (error, results, fields) {
                 if (error) rej(error);
-                res(results)
+                pool.query(`select table_task_id,task_type,task_state,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=${id}`, function (error, results, fields) {
+                    if (error) rej(error);
+                    res(results)
+                });
             });
         })
     },

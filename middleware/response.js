@@ -6,7 +6,7 @@ const response = async ctx => {
         };
     }else{
         ctx.body = {
-            Content: `<a href="http://34.80.134.190/#/tasks/${ctx.jwtToken}">点击显示关注、点赞、评论任务</a>`,
+            Content: `<a href="http://34.80.134.190/#/usertasksnew/${ctx.jwtToken}">点击显示关注、点赞、评论任务</a>`,
             MsgType: 'text'
         };
     }

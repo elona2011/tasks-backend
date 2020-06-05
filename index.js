@@ -13,6 +13,7 @@ init()
 const app = new Koa();
 
 app.use(serve(staticPath))
+app.use(xmlParser())
 app.use(bodyParser({
     enableTypes: ['json', 'xml']
 }))
