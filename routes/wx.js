@@ -1,4 +1,5 @@
 const xml2js = require("xml2js")
+const { createHash } = require('crypto');
 const jwt = require('jsonwebtoken')
 const { jwt_key, token } = require('../config')
 const { addUser, getToken } = require('../sql/account')
@@ -70,7 +71,6 @@ router.get('/wx', (ctx, next) => {
     let shaStr = sha1(str)
     if (shaStr === signature) {
         ctx.body = echostr
-        debugger
     } else {
         console.log(arr)
         ctx.body = "wrong"
