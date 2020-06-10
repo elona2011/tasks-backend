@@ -37,14 +37,21 @@ const init = () => {
 
         pool.query(`create table if not exists table_publish (\
             id int AUTO_INCREMENT PRIMARY KEY,\
+            state int default 1,\
             wx_openid varchar(100) default '',\
             dy_openid varchar(100) default '',\
             access_token varchar(1000) default '',\
             task_content text,\
             url text,\
             follow_num int,\
+            follow_finish_num int default 0,\
+            follow_doing_num int default 0,\
             thumb_num int,\
-            comment_num int\
+            thumb_finish_num int default 0,\
+            thumb_doing_num int default 0,\
+            comment_num int,\
+            comment_finish_num int default 0,\
+            comment_doing_num int default 0\
         );`, function (error, results, fields) {
             if (error) throw error;
             console.log('The solution is: ', results);
@@ -52,6 +59,8 @@ const init = () => {
 
         pool.query(`create table if not exists table_task (\
             id int AUTO_INCREMENT PRIMARY KEY,\
+            table_publish_id int,\
+            state int default 1,\
             task_content text,\
             task_url text,\
             task_type varchar(50),\

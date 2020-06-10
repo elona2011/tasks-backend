@@ -1,38 +1,10 @@
 const Router = require("@koa/router")
-const jwt = require('jsonwebtoken')
-const { addPublish } = require('../sql/publish')
-const { jwt_key } = require('../config')
 const { verifyOpenid, addDyAccount } = require('../sql/account')
 const { getNewTasks, getTask, startTask, mytasks, usertask, updatetask } = require('../sql/tasks')
-
+const setOpenid = require('../middleware/setOpenid')
 const router = new Router({ prefix: '/api' });
 
-router.use(async (ctx, next) => {
-    let decoded = jwt.verify(ctx.request.body.token, jwt_key)
-    let result = await verifyOpenid(decoded.openid || decoded.userOpenId)
-    console.log(result)
-    if (result.length != 1) {
-        throw new Error('openid not found')
-    }
-    ctx.openid = result[0].wx_openid
-
-    await next()
-})
-
-router.post('/publish', async (ctx, next) => {
-    console.log('/publish', ctx.request.body)
-    await addPublish({
-        wx_openid: ctx.openid,
-        url: ctx.request.body.videoUrl,
-        follow_num: ctx.request.body.follow,
-        comment_num: ctx.request.body.comment,
-        thumb_num: ctx.request.body.thumb,
-    })
-    ctx.body = {
-        code: 0,
-        result: 0,
-    }
-})
+router.use(setOpenid)
 
 router.post('/filldyid', async (ctx, next) => {
     console.log('/filldyid', ctx.request.body)
@@ -49,7 +21,7 @@ router.post('/filldyid', async (ctx, next) => {
 
 router.post('/newtasks', async (ctx, next) => {
     console.log('/newtasks', ctx.request.body)
-    let result = await getNewTasks()
+    let result = await getNewTasks({ wx_openid: ctx.openid })
     ctx.body = {
         code: 0,
         result,
@@ -84,7 +56,7 @@ router.post('/starttask', async (ctx, next) => {
     })
     ctx.body = {
         code: 0,
-        result: result.length == 2 ? result[1].insertId : null,
+        result: result.length ? result[0].insertId : null,
     }
 })
 

@@ -9,9 +9,9 @@ pool = mysql.createPool({
 })
 
 module.exports = {
-    async getNewTasks() {
+    async getNewTasks({ wx_openid }) {
         return new Promise((res, rej) => {
-            pool.query(`select id,task_type,task_num,task_used_num,task_finish_num,task_url from table_task where task_num-task_used_num-task_finish_num>0`, function (error, results, fields) {
+            pool.query(`select id,task_type,task_num,task_used_num,task_finish_num,task_url from table_task where state<>3 and task_num-task_used_num-task_finish_num>0 and id not in (select id from table_user_task where wx_openid='${wx_openid}') `, function (error, results, fields) {
                 if (error) rej(error);
                 res(results)
             });
@@ -46,7 +46,14 @@ module.exports = {
                 res(results)
             });
         })
-        return Promise.all([p0, p1])
+        let p2 = new Promise((res, rej) => {
+            let type_doing_num_name = task_type == 1 ? 'follow_doing_num' : (task_type == 2 ? 'thumb_doing_num' : 'comment_doing_num')
+            pool.query(`update table_publish set ${type_doing_num_name}=${type_doing_num_name}+1 where id=(select table_publish_id from table_task where id=${id})`, function (error, results, fields) {
+                if (error) rej(error);
+                res(results)
+            });
+        })
+        return Promise.all([p1, p0, p2])
     },
     async usertask({ id }) {
         return new Promise((res, rej) => {

@@ -5,6 +5,7 @@ const { createHash } = require('crypto');
 const serve = require('koa-static');
 const apiRouter = require('./routes/api')
 const wxRouter = require('./routes/wx')
+const publish = require('./routes/publish')
 const { init } = require('./sql')
 const response = require('./middleware/response')
 const bodyParser = require('koa-bodyparser');
@@ -19,6 +20,8 @@ app.use(bodyParser({
 }))
 app.use(apiRouter.routes())
 app.use(apiRouter.allowedMethods());
+app.use(publish.routes())
+app.use(publish.allowedMethods());
 app.use(wxRouter.routes())
 app.use(wxRouter.allowedMethods());
 
