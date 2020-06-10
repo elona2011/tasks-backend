@@ -18,12 +18,6 @@ app.use(xmlParser())
 app.use(bodyParser({
     enableTypes: ['json', 'xml']
 }))
-app.use(apiRouter.routes())
-app.use(apiRouter.allowedMethods());
-app.use(publish.routes())
-app.use(publish.allowedMethods());
-app.use(wxRouter.routes())
-app.use(wxRouter.allowedMethods());
 
 app.use(async function (ctx, next) {
     const str = `:method*****:url*****:body`
@@ -34,6 +28,14 @@ app.use(async function (ctx, next) {
     console.log(str);
     await next()
 })
+app.use(apiRouter.routes())
+app.use(apiRouter.allowedMethods());
+app.use(publish.routes())
+app.use(publish.allowedMethods());
+app.use(wxRouter.routes())
+app.use(wxRouter.allowedMethods());
+
+
 
 app.use(response);
 
