@@ -1,6 +1,6 @@
 const xml2js = require("xml2js")
 const jwt = require('jsonwebtoken')
-const { jwt_key } = require('../config')
+const { jwt_key, token } = require('../config')
 const { addUser, getToken } = require('../sql/account')
 const Router = require("@koa/router")
 const router = new Router();
@@ -62,19 +62,19 @@ const encrypt = (algorithm, content) => {
 }
 const sha1 = (content) => encrypt('sha1', content)
 
-// router.get('/wx', (ctx, next) => {
-//     let { echostr, timestamp, nonce, signature } = ctx.request.query
-//     let arr = [token, timestamp, nonce]
-//     arr.sort()
-//     let str = arr.join("")
-//     let shaStr = sha1(str)
-//     if (shaStr === signature) {
-//         ctx.body = echostr
-//         debugger
-//     } else {
-//         console.log(arr)
-//         ctx.body = "wrong"
-//     }
-// });
+router.get('/wx', (ctx, next) => {
+    let { echostr, timestamp, nonce, signature } = ctx.request.query
+    let arr = [token, timestamp, nonce]
+    arr.sort()
+    let str = arr.join("")
+    let shaStr = sha1(str)
+    if (shaStr === signature) {
+        ctx.body = echostr
+        debugger
+    } else {
+        console.log(arr)
+        ctx.body = "wrong"
+    }
+});
 
 module.exports = router
