@@ -19,13 +19,13 @@ const xmlBuilder = new xml2js.Builder({ headless: true, cdata: true, rootName: "
 
 router.post('/wx', async (ctx, next) => {
     // ctx.router available
-    // let body = ctx.request.body
-    // let xmlData = body.xml
-    // ctx.xmlData = xmlData
-    // ctx.msgType = getXmlValue(ctx, "MsgType")
-    // ctx.Content = getXmlValue(ctx, "Content")
-    // let openid = xmlData.FromUserName[0]
-    let openid = 'aaa'
+    let body = ctx.request.body
+    let xmlData = body.xml
+    ctx.xmlData = xmlData
+    ctx.msgType = getXmlValue(ctx, "MsgType")
+    ctx.Content = getXmlValue(ctx, "Content")
+    let openid = xmlData.FromUserName[0]
+    // let openid = 'aaa'
     try {
         let result = await getToken(openid)
         if (result.length >= 1) {
