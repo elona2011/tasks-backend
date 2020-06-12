@@ -43,9 +43,10 @@ module.exports = {
     },
     async startTask({ wx_openid, id }) {
         return new Promise((res, rej) => {
-            pool.query(`update table_task set task_used_num=task_used_num+1 where id=${id} and task_num>task_used_num and id not in (select id from table_user_task where wx_openid='${wx_openid}')`, function (error, results, fields) {
+            pool.query(`update table_task set task_used_num=task_used_num+1 where id=${id} and task_num>task_used_num and id not in (select table_task_id from table_user_task where wx_openid='${wx_openid}')`, function (error, results, fields) {
                 if (error) rej(error);
-                if (results.affectedRows > 0) {
+                console.log(results)
+                if (results.affectedRows == 1) {
                     pool.query(`select task_type,table_publish_id,task_money from table_task where id=${id}`, function (error, results, fields) {
                         if (error) rej(error);
                         if (results.length) {
