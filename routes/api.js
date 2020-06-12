@@ -96,7 +96,7 @@ router.post('/getUserPay', async (ctx, next) => {
         amount: ctx.request.body.money_pay,
         partner_trade_no: randomStr,
         openid: ctx.openid,
-        desc: "任务奖励"
+        desc: "评赞任务奖励"
     }).then(async res => {
         console.log(res)
         if (res.status == 200) {
