@@ -16,21 +16,21 @@ module.exports = {
                     if (error) rej(error);
                     console.log('results', results)
                     let p1 = new Promise((res, rej) => {
-                        pool.query(`insert into table_task (table_publish_id,task_url,task_type,task_num) values (${results.insertId},'${obj.url}','关注','${obj.follow_num}')`
+                        pool.query(`insert into table_task (table_publish_id,task_money,task_url,task_type,task_num) values (${results.insertId},10,'${obj.url}','关注','${obj.follow_num}')`
                             , function (error, results, fields) {
                                 if (error) rej(error);
                                 res(results)
                             });
                     })
                     let p2 = new Promise((res, rej) => {
-                        pool.query(`insert into table_task (table_publish_id,task_url,task_type,task_num) values (${results.insertId},'${obj.url}','点赞','${obj.thumb_num}')`
+                        pool.query(`insert into table_task (table_publish_id,task_money,task_url,task_type,task_num) values (${results.insertId},10,'${obj.url}','点赞','${obj.thumb_num}')`
                             , function (error, results, fields) {
                                 if (error) rej(error);
                                 res(results)
                             });
                     })
                     let p3 = new Promise((res, rej) => {
-                        pool.query(`insert into table_task (table_publish_id,task_url,task_type,task_num) values (${results.insertId},'${obj.url}','评论','${obj.comment_num}')`
+                        pool.query(`insert into table_task (table_publish_id,task_money,task_url,task_type,task_num) values (${results.insertId},10,'${obj.url}','评论','${obj.comment_num}')`
                             , function (error, results, fields) {
                                 if (error) rej(error);
                                 res(results)

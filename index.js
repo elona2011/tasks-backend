@@ -1,7 +1,6 @@
 const { port, token, staticPath } = require('./config')
 const Koa = require('koa');
 const xmlParser = require('koa-xml-body')
-const { createHash } = require('crypto');
 const serve = require('koa-static');
 const apiRouter = require('./routes/api')
 const wxRouter = require('./routes/wx')
@@ -34,8 +33,6 @@ app.use(publish.routes())
 app.use(publish.allowedMethods());
 app.use(wxRouter.routes())
 app.use(wxRouter.allowedMethods());
-
-
 
 app.use(response);
 
