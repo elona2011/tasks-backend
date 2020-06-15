@@ -9,11 +9,12 @@ const publish = require('./routes/publish')
 const { init } = require('./sql')
 const response = require('./middleware/response')
 const bodyParser = require('koa-bodyparser');
+const mount = require('koa-mount');
 
 init()
 const app = new Koa();
 
-app.use(serve(staticPath))
+app.use(mount('/home', serve(staticPath)))
 app.use(xmlParser())
 app.use(bodyParser({
     enableTypes: ['json', 'xml']
