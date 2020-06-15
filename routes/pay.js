@@ -73,10 +73,11 @@ router.post('/unifiedorder', async (ctx, next) => {
                     appId: mch_appid,
                     timeStamp: Math.floor(+new Date() / 1000) + "",
                     nonceStr: Math.random().toString(36).substring(2, 15),
-                    package1: `prepay_id=${obj.prepay_id}`,
+                    package: `prepay_id=${obj.prepay_id}`,
                     signType: "MD5", //微信签名方式：
                 }
-                sign(r,'paySign')
+                sign(r, 'paySign')
+                console.log('r', r)
                 ctx.body = getOk(r)
             }
 
