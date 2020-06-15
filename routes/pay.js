@@ -69,15 +69,15 @@ router.post('/unifiedorder', async (ctx, next) => {
             let obj = fixXmlObj(convert.xml2js(res.data, { compact: true }))
             console.log('obj', obj)
             if (obj.return_code == 'SUCCESS' && obj.result_code == 'SUCCESS') {
-                let obj = {
-                    appid: mch_appid,
+                let r = {
+                    appId: mch_appid,
                     timeStamp: Math.floor(+new Date() / 1000) + "",
                     nonceStr: Math.random().toString(36).substring(2, 15),
-                    package1: `prepay_id=${res.data.result.prepay_id}`,
+                    package1: `prepay_id=${obj.prepay_id}`,
                     signType: "MD5", //微信签名方式：
                 }
-                sign(obj)
-                ctx.body = getOk(obj)
+                sign(r,'paySign')
+                ctx.body = getOk(r)
             }
 
         }

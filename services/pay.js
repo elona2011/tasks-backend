@@ -19,8 +19,8 @@ module.exports = {
             amount: amount,
             desc,
         }
-        sign(obj)
-        
+        sign(obj, 'sign')
+
         let xml = xmlBuilder.buildObject(obj)
         console.log('xml', xml)
 
@@ -53,8 +53,8 @@ module.exports = {
             trade_type: 'JSAPI',
             openid,
         }
-        sign(obj)
-      
+        sign(obj, 'sign')
+
         let xml = xmlBuilder.buildObject(obj)
         console.log('xml', xml)
 
