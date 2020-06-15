@@ -1,0 +1,99 @@
+const Router = require("@koa/router")
+const { getUserPay, getUserMoney, getUserPayDetail, saveUnifiedorder } = require('../sql/pay')
+const setOpenid = require('../middleware/setOpenid')
+const { userPay, unifiedorder } = require('../services/pay')
+const { getRes, getOk, mch_appid } = require('../config')
+const convert = require('xml-js')
+const sign = require('../services/sign')
+
+function fixXmlObj(obj) {
+    let r = {}
+    Object.keys(obj.xml).forEach(n => {
+        r[n] = obj.xml[n]._cdata
+    })
+    return r
+}
+
+const router = new Router({ prefix: '/pay' });
+
+router.use(setOpenid)
+
+router.post('/getUserMoney', async (ctx, next) => {
+    console.log('/getUserMoney', ctx.request.body)
+    ctx.body = await getUserMoney({
+        wx_openid: ctx.openid,
+    })
+})
+router.post('/getUserPayDetail', async (ctx, next) => {
+    console.log('/getUserPayDetail', ctx.request.body)
+    ctx.body = await getUserPayDetail({
+        wx_openid: ctx.openid,
+        id: ctx.request.body.id
+    })
+})
+router.post('/getUserPay', async (ctx, next) => {
+    console.log('/getUserPay', ctx.request.body)
+    if (ctx.request.body.money_pay > 500) {
+        return ctx.body = getRes('moneyLarger')
+    }
+    if (ctx.request.body.money_pay < 100) {
+        return ctx.body = getRes('moneySmaller')
+    }
+    await userPay({
+        amount: ctx.request.body.money_pay,
+        openid: ctx.openid,
+        desc: "评赞任务奖励"
+    }).then(async res => {
+        console.log(res)
+        if (res.status == 200) {
+            let obj = fixXmlObj(convert.xml2js(res.data, { compact: true }))
+            ctx.body = await getUserPay(Object.assign({
+                wx_openid: ctx.openid,
+                money_pay: ctx.request.body.money_pay,
+                wx_id: randomStr
+            }, obj))
+            console.log(ctx.body)
+        }
+    })
+})
+
+router.post('/unifiedorder', async (ctx, next) => {
+    console.log('/unifiedorder', ctx.request.body)
+    await unifiedorder({
+        total_fee: ctx.request.body.money,
+        spbill_create_ip: ctx.req.connection.remoteAddress,
+        openid: ctx.openid,
+    }).then(async res => {
+        console.log(res)
+        if (res.status == 200) {
+            let obj = fixXmlObj(convert.xml2js(res.data, { compact: true }))
+            console.log('obj', obj)
+            if (obj.return_code == 'SUCCESS' && obj.result_code == 'SUCCESS') {
+                let obj = {
+                    appid: mch_appid,
+                    timeStamp: Math.floor(+new Date() / 1000) + "",
+                    nonceStr: Math.random().toString(36).substring(2, 15),
+                    package1: `prepay_id=${res.data.result.prepay_id}`,
+                    signType: "MD5", //微信签名方式：
+                }
+                sign(obj)
+                ctx.body = getOk(obj)
+            }
+
+        }
+    })
+})
+
+const getXmlValue = function (ctx, field) {
+    if (!ctx.xmlData) return
+    return ctx.xmlData[field][0]
+}
+
+//异步接收微信支付结果通知的回调地址
+router.post('/wxpay', async (ctx, next) => {
+    console.log('/wxpay', ctx.request.body)
+    let xmlData = ctx.request.body.xml
+    console.log('xmlData', xmlData)
+})
+
+module.exports = router

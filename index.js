@@ -3,6 +3,7 @@ const Koa = require('koa');
 const xmlParser = require('koa-xml-body')
 const serve = require('koa-static');
 const apiRouter = require('./routes/api')
+const payRouter = require('./routes/pay')
 const wxRouter = require('./routes/wx')
 const publish = require('./routes/publish')
 const { init } = require('./sql')
@@ -33,6 +34,8 @@ app.use(publish.routes())
 app.use(publish.allowedMethods());
 app.use(wxRouter.routes())
 app.use(wxRouter.allowedMethods());
+app.use(payRouter.routes())
+app.use(payRouter.allowedMethods());
 
 app.use(response);
 

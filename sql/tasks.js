@@ -1,4 +1,4 @@
-const { sql_user, sql_password, r } = require('../config')
+const { sql_user, sql_password, getOk, getRes } = require('../config')
 const mysql = require('mysql')
 
 pool = mysql.createPool({
@@ -17,7 +17,7 @@ module.exports = {
         return new Promise((res, rej) => {
             pool.query(`select id,task_type,task_num,task_used_num,task_finish_num,task_url from table_task where state=1 and task_num-task_used_num>0 and id not in (select table_task_id from table_user_task where wx_openid='${wx_openid}') `, function (error, results, fields) {
                 if (error) rej(error);
-                res(r.ok(results))
+                res(getOk(results))
             });
         })
     },
@@ -25,7 +25,7 @@ module.exports = {
         return new Promise((res, rej) => {
             pool.query(`select id,table_task_id,task_type,task_state,(select task_url from mydb.table_task where id=table_task_id) as task_url from table_user_task where wx_openid='${wx_openid}'`, function (error, results, fields) {
                 if (error) rej(error);
-                res(r.ok(results))
+                res(getOk(results))
             });
         })
     },
@@ -34,9 +34,9 @@ module.exports = {
             pool.query(`select id,task_type,task_num,task_used_num,task_finish_num,task_url from table_task where id=${id}`, function (error, results, fields) {
                 if (error) rej(error);
                 if (results.length) {
-                    res(r.ok(results[0]))
+                    res(getOk(results[0]))
                 } else {
-                    res(r.taskNotFound)
+                    res(getRes('taskNotFound'))
                 }
             });
         })
@@ -66,14 +66,14 @@ module.exports = {
                                 });
                             })
                             Promise.all([p1, p2]).then(r1 => {
-                                res(r.ok(r1[0].insertId))
+                                res(getOk(r1[0].insertId))
                             }).catch(err => {
                                 rej(err)
                             })
                         }
                     })
                 } else {
-                    res(r.taskIsOut)
+                    res(getRes('taskIsOut'))
                 }
             });
         })
@@ -83,9 +83,9 @@ module.exports = {
             pool.query(`select table_task_id,task_type,task_state,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=${id}`, function (error, results, fields) {
                 if (error) rej(error);
                 if (results.length) {
-                    res(r.ok(results[0]))
+                    res(getOk(results[0]))
                 } else {
-                    res(r.taskNotFound)
+                    res(getRes('taskNotFound'))
                 }
             });
         })
@@ -131,7 +131,7 @@ module.exports = {
                             let p2 = new Promise((res, rej) => {
                                 pool.query(`select table_task_id,task_type,task_state,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=${id}`, function (error, results, fields) {
                                     if (error) rej(error);
-                                    res(r.ok(results[0]))
+                                    res(getOk(results[0]))
                                 });
                             })
                             Promise.all([p2, p1, p0, p3]).then(re => {
@@ -140,73 +140,7 @@ module.exports = {
                         }
                     });
                 } else {
-                    res(r.taskNotFound)
-                }
-            });
-        })
-    },
-    async getUserMoney({ wx_openid }) {
-        return new Promise((res, rej) => {
-            pool.query(`select money,money_pay from table_user where wx_openid='${wx_openid}'`, function (error, results, fields) {
-                if (error) rej(error);
-                if (results.length) {
-                    res(r.ok(results[0]))
-                } else {
-                    res(r.taskNotFound)
-                }
-            });
-        })
-    },
-    async getUserPayDetail({ wx_openid, id }) {
-        return new Promise((res, rej) => {
-            pool.query(`select result_code from table_pay where id='${id}'`, function (error, results, fields) {
-                if (error) rej(error);
-                if (results.length) {
-                    res(r.ok(results[0]))
-                } else {
-                    res(r.taskNotFound)
-                }
-            });
-        })
-    },
-    async getUserPay(obj) {
-        return new Promise((res, rej) => {
-            pool.query(`select money from table_user where wx_openid='${obj.wx_openid}'`, function (error, results, fields) {
-                if (error) rej(error);
-                if (results.length) {
-                    let { money } = results[0]
-
-                    pool.query(`insert into table_pay (wx_openid,money_before,money,wx_id,return_code,return_msg,result_code,err_code,err_code_des,partner_trade_no,payment_no,payment_time)\
-                                values ('${obj.wx_openid}',\
-                                        '${money}',\
-                                        '${obj.money_pay}',\
-                                        '${obj.wx_id}',\
-                                        '${obj.return_code || ''}',\
-                                        '${obj.return_msg || ''}',\
-                                        '${obj.result_code || ''}',\
-                                        '${obj.err_code || ''}',\
-                                        '${obj.err_code_des || ''}',\
-                                        '${obj.partner_trade_no || ''}',\
-                                        '${obj.payment_no || ''}',\
-                                        '${obj.payment_time || ''}')`, function (error, results, fields) {
-                        if (error) rej(error);
-                        console.log(results)
-                        if (results.affectedRows == 1) {
-                            if (obj.return_code == 'SUCCESS' && obj.result_code == 'SUCCESS') {
-                                pool.query(`update table_user set money=money-${obj.money_pay},money_pay=money_pay+${obj.money_pay} where wx_openid='${obj.wx_openid}'`, function (error, results, fields) {
-                                    if (error) {
-                                        console.log(error)
-                                        return rej(error);
-                                    }
-                                    console.log('results', results)
-                                });
-                            }
-                            res(r.ok(results.insertId))
-                        }
-                        res(r.dbFail)
-                    });
-                } else {
-                    res(r.userNotFound)
+                    res(getRes('taskNotFound'))
                 }
             });
         })

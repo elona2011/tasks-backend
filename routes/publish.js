@@ -57,4 +57,17 @@ router.post('/editPublishTask', async (ctx, next) => {
     }
 })
 
+router.post('/publishPay', async (ctx, next) => {
+    console.log('/publishPay', ctx.request.body)
+    let result = await publishPay({
+        id: ctx.request.body.id,
+        state: ctx.request.body.state,
+        wx_openid: ctx.openid,
+    })
+    ctx.body = {
+        code: 0,
+        result: null,
+    }
+})
+
 module.exports = router
