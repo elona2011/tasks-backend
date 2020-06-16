@@ -14,8 +14,9 @@ const mount = require('koa-mount');
 init()
 const app = new Koa();
 
-app.use(serve(staticPath))
-// app.use(mount('/home', serve(staticPath)))
+// app.use(serve(staticPath))
+app.use(mount('/home', serve(staticPath)))
+app.use(mount('/', serve('website')))
 app.use(xmlParser())
 app.use(bodyParser({
     enableTypes: ['json', 'xml']
