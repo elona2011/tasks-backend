@@ -19,7 +19,7 @@ module.exports = {
             amount: amount,
             desc,
         }
-        sign(obj, 'sign')
+        obj.sign = sign(obj)
 
         let xml = xmlBuilder.buildObject(obj)
         console.log('xml', xml)
@@ -49,11 +49,11 @@ module.exports = {
             out_trade_no: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
             total_fee,
             spbill_create_ip,
-            notify_url: `${hostname}/wxpay`,
+            notify_url: `${hostname}/pay/wxpay`,
             trade_type: 'JSAPI',
             openid,
         }
-        sign(obj, 'sign')
+        obj.sign = sign(obj)
 
         let xml = xmlBuilder.buildObject(obj)
         console.log('xml', xml)

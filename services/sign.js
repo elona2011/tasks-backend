@@ -1,7 +1,7 @@
 const { createHash } = require('crypto');
 const { mch_appid, mchid, seckey, hostname } = require('../config')
 
-module.exports = (obj,signName) => {
+module.exports = (obj) => {
     let r = ''
     Object.keys(obj).sort().forEach(n => {
         if (r) r += '&'
@@ -9,6 +9,5 @@ module.exports = (obj,signName) => {
     })
     r += '&key=' + seckey
 
-    let sign = createHash('md5').update(r).digest("hex").toUpperCase()
-    obj[signName] = sign
+    return createHash('md5').update(r).digest("hex").toUpperCase()
 }

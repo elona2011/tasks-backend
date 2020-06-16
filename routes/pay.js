@@ -76,11 +76,10 @@ router.post('/unifiedorder', async (ctx, next) => {
                     package: `prepay_id=${obj.prepay_id}`,
                     signType: "MD5", //微信签名方式：
                 }
-                sign(r, 'paySign')
+                r.paySign = sign(r)
                 console.log('r', r)
                 ctx.body = getOk(r)
             }
-
         }
     })
 })
@@ -95,6 +94,13 @@ router.post('/wxpay', async (ctx, next) => {
     console.log('/wxpay', ctx.request.body)
     let xmlData = ctx.request.body.xml
     console.log('xmlData', xmlData)
+    if (xmlData.return_code == 'SUCCESS') {
+        let signRemote = xmlData.sign
+        delete xmlData.sign
+        if (signRemote == sign(xmlData)) {
+            console.log('ok')
+        }
+    }
 })
 
 module.exports = router
