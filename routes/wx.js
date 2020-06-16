@@ -5,6 +5,7 @@ const { jwt_key, token } = require('../config')
 const { addUser, getToken } = require('../sql/account')
 const Router = require("@koa/router")
 const router = new Router();
+const sign = require('../services/sign')
 
 const getXmlValue = function (ctx, field) {
     if (!ctx.xmlData) return
@@ -16,6 +17,20 @@ const getOpenId = function (ctx) {
     return openId
 }
 const xmlBuilder = new xml2js.Builder({ headless: true, cdata: true, rootName: "xml" });
+
+//异步接收微信支付结果通知的回调地址
+router.post('/pay/wxpay', async (ctx, next) => {
+    console.log('/pay/wxpay', ctx.request.body)
+    let xmlData = ctx.request.body.xml
+    console.log('xmlData', xmlData)
+    if (xmlData.return_code == 'SUCCESS') {
+        let signRemote = xmlData.sign
+        delete xmlData.sign
+        if (signRemote == sign(xmlData)) {
+            console.log('ok')
+        }
+    }
+})
 
 router.post('/wx', async (ctx, next) => {
     // ctx.router available

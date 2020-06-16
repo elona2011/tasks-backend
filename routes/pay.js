@@ -89,18 +89,6 @@ const getXmlValue = function (ctx, field) {
     return ctx.xmlData[field][0]
 }
 
-//异步接收微信支付结果通知的回调地址
-router.post('/wxpay', async (ctx, next) => {
-    console.log('/wxpay', ctx.request.body)
-    let xmlData = ctx.request.body.xml
-    console.log('xmlData', xmlData)
-    if (xmlData.return_code == 'SUCCESS') {
-        let signRemote = xmlData.sign
-        delete xmlData.sign
-        if (signRemote == sign(xmlData)) {
-            console.log('ok')
-        }
-    }
-})
+
 
 module.exports = router
