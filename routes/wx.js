@@ -34,9 +34,7 @@ router.post('/pay/wxpay', async (ctx, next) => {
         delete newXml.sign
         if (signRemote == sign(newXml)) {
             console.log('ok')
-            saveUnifiedorder(Object.assign({
-                wx_openid: ctx.openid,
-            }, newXml))
+            saveUnifiedorder(newXml)
             let xml = js2xml({
                 return_code: 'SUCCESS',
                 return_msg: 'OK'

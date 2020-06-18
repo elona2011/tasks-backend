@@ -77,14 +77,14 @@ module.exports = {
     },
     async saveUnifiedorder(obj) {
         return new Promise((res, rej) => {
-            pool.query(`select money from table_user where wx_openid='${obj.wx_openid}'`, function (error, results, fields) {
+            pool.query(`select money from table_user where wx_openid='${obj.openid}'`, function (error, results, fields) {
                 if (error) rej(error);
                 if (results.length) {
                     let { money } = results[0]
 
                     pool.query(`insert into table_pay (money_type,wx_openid,money_before,money,wx_id,return_code,return_msg,result_code,err_code,err_code_des,partner_trade_no,payment_no,payment_time\
                         is_subscribe,trade_type,bank_type,total_fee,transaction_id,device_info,out_trade_no,time_end)\
-                                values (0,'${obj.wx_openid}',\
+                                values (0,'${obj.openid}',\
                                         '${money}',\
                                         '${obj.cash_fee}',\
                                         '${obj.wx_id}',\
@@ -108,7 +108,7 @@ module.exports = {
                         console.log(results)
                         if (results.affectedRows == 1) {
                             if (obj.return_code == 'SUCCESS' && obj.result_code == 'SUCCESS') {
-                                pool.query(`update table_user set money=money+${obj.cash_fee},money_in=money_in+${obj.cash_fee} where wx_openid='${obj.wx_openid}'`, function (error, results, fields) {
+                                pool.query(`update table_user set money=money+${obj.cash_fee},money_in=money_in+${obj.cash_fee} where wx_openid='${obj.openid}'`, function (error, results, fields) {
                                     if (error) {
                                         console.log(error)
                                         return rej(error);
