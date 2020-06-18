@@ -50,7 +50,7 @@ router.post('/getUserPay', async (ctx, next) => {
             ctx.body = await getUserPay(Object.assign({
                 wx_openid: ctx.openid,
                 money_pay: ctx.request.body.money_pay,
-                wx_id: randomStr
+                wx_id: Math.random().toString(36).substring(2, 15)
             }, obj))
             console.log(ctx.body)
         }
