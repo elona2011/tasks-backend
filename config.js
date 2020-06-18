@@ -29,5 +29,6 @@ module.exports = {
     },
     mch_appid: 'xxx',
     mchid: 'xxx',
-    seckey: 'xxx'
+    seckey: 'xxx',
+    cert: '../apiclient_cert.p12'
 }

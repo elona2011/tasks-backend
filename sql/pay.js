@@ -82,7 +82,7 @@ module.exports = {
                 if (results.length) {
                     let { money } = results[0]
 
-                    pool.query(`insert into table_pay (money_type,wx_openid,money_before,money,wx_id,return_code,return_msg,result_code,err_code,err_code_des,partner_trade_no,payment_no,payment_time\
+                    pool.query(`insert into table_pay (money_type,wx_openid,money_before,money,wx_id,return_code,return_msg,result_code,err_code,err_code_des,partner_trade_no,payment_no,payment_time,\
                         is_subscribe,trade_type,bank_type,total_fee,transaction_id,device_info,out_trade_no,time_end)\
                                 values (0,'${obj.openid}',\
                                         '${money}',\

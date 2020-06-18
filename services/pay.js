@@ -1,7 +1,7 @@
 const axios = require('axios').default;
 const https = require('https')
 const fs = require('fs')
-const { mch_appid, mchid, hostname } = require('../config')
+const { mch_appid, mchid, hostname, cert } = require('../config')
 const sign = require('./sign')
 const { js2xml } = require('./xml')
 
@@ -30,7 +30,7 @@ module.exports = {
             },
             data: xml,
             httpsAgent: new https.Agent({
-                pfx: fs.readFileSync('../apiclient_cert.p12'),
+                pfx: fs.readFileSync(cert),
                 passphrase: mchid
             })
         })
