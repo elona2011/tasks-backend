@@ -3,9 +3,11 @@ const { createHash } = require('crypto');
 const jwt = require('jsonwebtoken')
 const { jwt_key, token } = require('../config')
 const { addUser, getToken } = require('../sql/account')
+const { saveUnifiedorder } = require('../sql/pay')
 const Router = require("@koa/router")
 const router = new Router();
 const sign = require('../services/sign')
+const { js2xml } = require('./xml')
 
 const getXmlValue = function (ctx, field) {
     if (!ctx.xmlData) return
@@ -28,6 +30,15 @@ router.post('/pay/wxpay', async (ctx, next) => {
         delete xmlData.sign
         if (signRemote == sign(xmlData)) {
             console.log('ok')
+            saveUnifiedorder(Object.assign({
+                wx_openid: ctx.openid,
+            }, xmlData))
+            let xml = js2xml({
+                return_code: 'SUCCESS',
+                return_msg: 'OK'
+            })
+            console.log('xml', xml)
+            ctx.body = xml
         }
     }
 })

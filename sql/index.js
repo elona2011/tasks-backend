@@ -22,6 +22,7 @@ const init = () => {
         pool.query(`create table if not exists table_user (\
                         wx_openid varchar(100) PRIMARY KEY,\
                         money int default 0,\
+                        money_in int default 0,\
                         money_pay int default 0,\
                         jwt text,\
                         is_authorize BOOL default false,\
@@ -102,6 +103,7 @@ const init = () => {
 
         pool.query(`create table if not exists table_pay (\
             id int AUTO_INCREMENT PRIMARY KEY,\
+            money_type int,\
             wx_openid varchar(100) default '',\
             money_before int,\
             money int,\
@@ -115,7 +117,15 @@ const init = () => {
             err_code_des varchar(200) default '',\
             partner_trade_no varchar(100) default '',\
             payment_no varchar(100) default '',\
-            payment_time varchar(100) default ''\
+            payment_time varchar(100) default '',\
+            is_subscribe varchar(100) default '',\
+            trade_type varchar(100) default '',\
+            bank_type varchar(100) default '',\
+            total_fee int,\
+            transaction_id varchar(100) default '',\
+            device_info varchar(100) default '',\
+            out_trade_no varchar(100) default '',\
+            time_end varchar(100) default ''\
         );`, function (error, results, fields) {
             if (error) throw error;
             console.log('The solution is: ', results);

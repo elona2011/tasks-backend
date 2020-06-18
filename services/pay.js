@@ -1,14 +1,12 @@
 const axios = require('axios').default;
-const xml2js = require("xml2js")
 const https = require('https')
 const fs = require('fs')
 const { mch_appid, mchid, hostname } = require('../config')
 const sign = require('./sign')
+const { js2xml } = require('./xml')
 
 module.exports = {
     userPay({ amount, openid, desc }) {
-        const xmlBuilder = new xml2js.Builder({ headless: true, cdata: true, rootName: "xml" });
-
         let obj = {
             mch_appid,
             mchid,
@@ -21,7 +19,7 @@ module.exports = {
         }
         obj.sign = sign(obj)
 
-        let xml = xmlBuilder.buildObject(obj)
+        let xml = js2xml(obj)
         console.log('xml', xml)
 
         return axios({
@@ -38,8 +36,6 @@ module.exports = {
         })
     },
     unifiedorder({ total_fee, spbill_create_ip, openid }) {
-        const xmlBuilder = new xml2js.Builder({ headless: true, cdata: true, rootName: "xml" });
-
         let obj = {
             appid: mch_appid,
             mch_id: mchid,
@@ -55,7 +51,7 @@ module.exports = {
         }
         obj.sign = sign(obj)
 
-        let xml = xmlBuilder.buildObject(obj)
+        let xml = js2xml(obj)
         console.log('xml', xml)
 
         return axios({

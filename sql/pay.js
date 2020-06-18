@@ -40,8 +40,8 @@ module.exports = {
                 if (results.length) {
                     let { money } = results[0]
 
-                    pool.query(`insert into table_pay (wx_openid,money_before,money,wx_id,return_code,return_msg,result_code,err_code,err_code_des,partner_trade_no,payment_no,payment_time)\
-                                values ('${obj.wx_openid}',\
+                    pool.query(`insert into table_pay (money_type,wx_openid,money_before,money,wx_id,return_code,return_msg,result_code,err_code,err_code_des,partner_trade_no,payment_no,payment_time)\
+                                values (1,'${obj.wx_openid}',\
                                         '${money}',\
                                         '${obj.money_pay}',\
                                         '${obj.wx_id}',\
@@ -82,10 +82,11 @@ module.exports = {
                 if (results.length) {
                     let { money } = results[0]
 
-                    pool.query(`insert into table_pay (wx_openid,money_before,money,wx_id,return_code,return_msg,result_code,err_code,err_code_des,partner_trade_no,payment_no,payment_time)\
-                                values ('${obj.wx_openid}',\
+                    pool.query(`insert into table_pay (money_type,wx_openid,money_before,money,wx_id,return_code,return_msg,result_code,err_code,err_code_des,partner_trade_no,payment_no,payment_time\
+                        is_subscribe,trade_type,bank_type,total_fee,transaction_id,device_info,out_trade_no,time_end)\
+                                values (0,'${obj.wx_openid}',\
                                         '${money}',\
-                                        '${obj.money_pay}',\
+                                        '${obj.cash_fee}',\
                                         '${obj.wx_id}',\
                                         '${obj.return_code || ''}',\
                                         '${obj.return_msg || ''}',\
@@ -94,12 +95,20 @@ module.exports = {
                                         '${obj.err_code_des || ''}',\
                                         '${obj.partner_trade_no || ''}',\
                                         '${obj.payment_no || ''}',\
-                                        '${obj.payment_time || ''}')`, function (error, results, fields) {
+                                        '${obj.payment_time || ''}',\
+                                        '${obj.is_subscribe || ''}',\
+                                        '${obj.trade_type || ''}',\
+                                        '${obj.bank_type || ''}',\
+                                        '${obj.total_fee || ''}',\
+                                        '${obj.transaction_id || ''}',\
+                                        '${obj.device_info || ''}',\
+                                        '${obj.out_trade_no || ''}',\
+                                        '${obj.time_end || ''}')`, function (error, results, fields) {
                         if (error) rej(error);
                         console.log(results)
                         if (results.affectedRows == 1) {
                             if (obj.return_code == 'SUCCESS' && obj.result_code == 'SUCCESS') {
-                                pool.query(`update table_user set money=money-${obj.money_pay},money_pay=money_pay+${obj.money_pay} where wx_openid='${obj.wx_openid}'`, function (error, results, fields) {
+                                pool.query(`update table_user set money=money+${obj.cash_fee},money_in=money_in+${obj.cash_fee} where wx_openid='${obj.wx_openid}'`, function (error, results, fields) {
                                     if (error) {
                                         console.log(error)
                                         return rej(error);
