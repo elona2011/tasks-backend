@@ -130,7 +130,7 @@ module.exports = {
                                 });
                             })
                             let p2 = new Promise((res, rej) => {
-                                pool.query(`select table_task_id,task_type,task_state,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=${id}`, function (error, results, fields) {
+                                pool.query(`select table_task_id,task_money,task_type,task_state,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=${id}`, function (error, results, fields) {
                                     if (error) rej(error);
                                     res(getOk(results[0]))
                                 });

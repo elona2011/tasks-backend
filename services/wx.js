@@ -28,7 +28,7 @@ const setMenu = async () => {
             "button": [
                 {
                     "type": "click",
-                    "name": "发布任务👍",
+                    "name": "发布任务📋",
                     "key": "publish"
                 },
                 {
@@ -36,16 +36,16 @@ const setMenu = async () => {
                     "name": "做任务🔧",
                     "key": "task"
                 }, {
-                    "name": "菜单",
+                    "name": "我的🎁",
                     "sub_button": [
                         {
                             "type": "click",
-                            "name": "充值💰",
+                            "name": "点我充值💰",
                             "key": "moneyIn"
                         },
                         {
                             "type": "click",
-                            "name": "提现💹",
+                            "name": "点我提现💹",
                             "key": "moneyOut"
                         }]
                 }]
