@@ -43,5 +43,6 @@ const setMenu = async () => {
 }
 
 module.exports = {
-    getAccessToken
+    getAccessToken,
+    setMenu
 }

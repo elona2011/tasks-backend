@@ -10,7 +10,9 @@ const { initSql } = require('./sql')
 const response = require('./middleware/response')
 const bodyParser = require('koa-bodyparser');
 const mount = require('koa-mount');
+const { setMenu } = require('./services/wx')
 
+setMenu()
 initSql()
 const app = new Koa();
 
