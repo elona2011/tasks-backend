@@ -28,24 +28,24 @@ const setMenu = async () => {
             "button": [
                 {
                     "type": "click",
-                    "name": "发布任务",
+                    "name": "发布任务👍",
                     "key": "publish"
                 },
                 {
                     "type": "click",
-                    "name": "做任务",
+                    "name": "做任务🔧",
                     "key": "task"
                 }, {
                     "name": "菜单",
                     "sub_button": [
                         {
                             "type": "click",
-                            "name": "充值",
+                            "name": "充值💰",
                             "key": "moneyIn"
                         },
                         {
                             "type": "click",
-                            "name": "提现",
+                            "name": "提现💹",
                             "key": "moneyOut"
                         }]
                 }]
