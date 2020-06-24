@@ -12,7 +12,7 @@ const getAccessToken = () => {
         },
     }).then(res => {
         console.log('getAccessToken', res)
-        return res.access_token
+        return res.data.access_token
     })
 }
 
@@ -35,6 +35,19 @@ const setMenu = async () => {
                     "type": "click",
                     "name": "做任务",
                     "key": "task"
+                }, {
+                    "name": "菜单",
+                    "sub_button": [
+                        {
+                            "type": "click",
+                            "name": "充值",
+                            "key": "moneyIn"
+                        },
+                        {
+                            "type": "click",
+                            "name": "提现",
+                            "key": "moneyOut"
+                        }]
                 }]
         }
     }).then(res => {
