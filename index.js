@@ -6,12 +6,12 @@ const apiRouter = require('./routes/api')
 const payRouter = require('./routes/pay')
 const wxRouter = require('./routes/wx')
 const publish = require('./routes/publish')
-const { init } = require('./sql')
+const { initSql } = require('./sql')
 const response = require('./middleware/response')
 const bodyParser = require('koa-bodyparser');
 const mount = require('koa-mount');
 
-init()
+initSql()
 const app = new Koa();
 
 // app.use(serve(staticPath))

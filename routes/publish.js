@@ -12,8 +12,11 @@ router.post('/publish', async (ctx, next) => {
         wx_openid: ctx.openid,
         url: ctx.request.body.videoUrl,
         follow_num: ctx.request.body.follow,
+        follow_price: ctx.request.body.followPrice,
         comment_num: ctx.request.body.comment,
+        comment_price: ctx.request.body.commentPrice,
         thumb_num: ctx.request.body.thumb,
+        thumb_price: ctx.request.body.thumbPrice,
     })
     ctx.body = {
         code: 0,

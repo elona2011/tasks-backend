@@ -15,7 +15,8 @@ function getNameByType(task_type) {
 module.exports = {
     async newtasks({ wx_openid }) {
         return new Promise((res, rej) => {
-            pool.query(`select id,task_type,task_num,task_used_num,task_finish_num,task_url from table_task where state=1 and task_num-task_used_num>0 and id not in (select table_task_id from table_user_task where wx_openid='${wx_openid}') `, function (error, results, fields) {
+            pool.query(`select id,task_money,task_type,task_num,task_used_num,task_finish_num,task_url from table_task \
+            where state=1 and task_num-task_used_num>0 and id not in (select table_task_id from table_user_task where wx_openid='${wx_openid}') `, function (error, results, fields) {
                 if (error) rej(error);
                 res(getOk(results))
             });
@@ -80,7 +81,7 @@ module.exports = {
     },
     async usertask({ id }) {
         return new Promise((res, rej) => {
-            pool.query(`select table_task_id,task_type,task_state,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=${id}`, function (error, results, fields) {
+            pool.query(`select table_task_id,task_money,task_type,task_state,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=${id}`, function (error, results, fields) {
                 if (error) rej(error);
                 if (results.length) {
                     res(getOk(results[0]))

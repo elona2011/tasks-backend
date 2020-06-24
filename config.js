@@ -27,6 +27,7 @@ module.exports = {
             result
         }
     },
+    AppSecret: 'xxx',
     mch_appid: 'xxx',
     mchid: 'xxx',
     seckey: 'xxx',
