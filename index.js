@@ -1,4 +1,4 @@
-const { port, token, staticPath } = require('./config')
+const { port, websitePath, staticPath } = require('./config')
 const Koa = require('koa');
 const xmlParser = require('koa-xml-body')
 const serve = require('koa-static');
@@ -18,7 +18,7 @@ const app = new Koa();
 
 // app.use(serve(staticPath))
 app.use(mount('/home', serve(staticPath)))
-app.use(mount('/', serve('website')))
+app.use(mount('/', serve(websitePath)))
 app.use(xmlParser())
 app.use(bodyParser({
     enableTypes: ['json', 'xml']
