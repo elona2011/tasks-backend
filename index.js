@@ -1,5 +1,6 @@
 const { port, websitePath, staticPath } = require('./config')
 const Koa = require('koa');
+const koaBody = require('koa-body');
 const xmlParser = require('koa-xml-body')
 const serve = require('koa-static');
 const apiRouter = require('./routes/api')
@@ -19,10 +20,10 @@ const app = new Koa();
 // app.use(serve(staticPath))
 app.use(mount('/home', serve(staticPath)))
 app.use(mount('/', serve(websitePath)))
-app.use(xmlParser())
-app.use(bodyParser({
-    enableTypes: ['json', 'xml']
-}))
+app.use(koaBody())
+// app.use(bodyParser({
+//     enableTypes: ['json', 'xml']
+// }))
 
 app.use(async function (ctx, next) {
     const str = `:method*****:url*****:body`
