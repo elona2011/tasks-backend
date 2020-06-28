@@ -23,18 +23,14 @@ const { js2xml, xml2js } = require('../services/xml')
 //异步接收微信支付结果通知的回调地址
 router.post('/pay/wxpay', async (ctx, next) => {
     console.log('/pay/wxpay', ctx.request.body)
-    let xmlData = ctx.request.body.xml
-    let newXml = {}
-    Object.keys(xmlData).forEach(n => {
-        newXml[n] = xmlData[n][0]
-    })
-    console.log('xmlData', newXml)
-    if (newXml.return_code == 'SUCCESS') {
-        let signRemote = newXml.sign
-        delete newXml.sign
-        if (signRemote == sign(newXml)) {
+    let xmlData = xml2js(ctx.request.body)
+    console.log('xmlData', xmlData)
+    if (xmlData.return_code == 'SUCCESS') {
+        let signRemote = xmlData.sign
+        delete xmlData.sign
+        if (signRemote == sign(xmlData)) {
             console.log('ok')
-            saveUnifiedorder(newXml)
+            saveUnifiedorder(xmlData)
             let xml = js2xml({
                 return_code: 'SUCCESS',
                 return_msg: 'OK'
