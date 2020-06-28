@@ -1,4 +1,4 @@
-const xml2js = require("xml2js")
+// const xml2js = require("xml2js")
 const { createHash } = require('crypto');
 const jwt = require('jsonwebtoken')
 const { jwt_key, token } = require('../config')
@@ -7,18 +7,18 @@ const { saveUnifiedorder } = require('../sql/pay')
 const Router = require("@koa/router")
 const router = new Router();
 const sign = require('../services/sign')
-const { js2xml } = require('../services/xml')
+const { js2xml, xml2js } = require('../services/xml')
 
-const getXmlValue = function (ctx, field) {
-    if (!ctx.xmlData) return
-    return ctx.xmlData[field][0]
-}
-const getOpenId = function (ctx) {
-    if (ctx.openId) return ctx.openId
-    let openId = ctx.openId = getXmlValue(ctx, "FromUserName")
-    return openId
-}
-const xmlBuilder = new xml2js.Builder({ headless: true, cdata: true, rootName: "xml" });
+// const getXmlValue = function (ctx, field) {
+//     if (!ctx.xmlData) return
+//     return ctx.xmlData[field][0]
+// }
+// const getOpenId = function (ctx) {
+//     if (ctx.openId) return ctx.openId
+//     let openId = ctx.openId = getXmlValue(ctx, "FromUserName")
+//     return openId
+// }
+// const xmlBuilder = new xml2js.Builder({ headless: true, cdata: true, rootName: "xml" });
 
 //异步接收微信支付结果通知的回调地址
 router.post('/pay/wxpay', async (ctx, next) => {
@@ -48,11 +48,11 @@ router.post('/pay/wxpay', async (ctx, next) => {
 router.post('/wx', async (ctx, next) => {
     // ctx.router available
     let body = ctx.request.body
-    let xmlData = body.xml
+    let xmlData = xml2js(body)
     ctx.xmlData = xmlData
-    ctx.msgType = getXmlValue(ctx, "MsgType")
-    ctx.Content = getXmlValue(ctx, "EventKey")
-    let openid = xmlData.FromUserName[0]
+    // ctx.msgType = getXmlValue(ctx, "MsgType")
+    ctx.Content = xmlData.EventKey
+    let openid = xmlData.FromUserName
     // let openid = 'aaa'
     try {
         let result = await getToken(openid)
@@ -79,8 +79,7 @@ router.post('/wx', async (ctx, next) => {
     let ret = Object.assign(replyObject, ctx.body)
 
     ctx.set('Content-Type', 'text/xml');
-    var xml = xmlBuilder.buildObject(ret)
-    ctx.body = xml
+    ctx.body = js2xml(ret)
 });
 
 // for wx config

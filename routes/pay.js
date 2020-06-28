@@ -3,16 +3,8 @@ const { getUserPay, getUserMoney, getUserPayDetail, saveUnifiedorder } = require
 const setOpenid = require('../middleware/setOpenid')
 const { userPay, unifiedorder } = require('../services/pay')
 const { getRes, getOk, mch_appid } = require('../config')
-const convert = require('xml-js')
 const sign = require('../services/sign')
-
-function fixXmlObj(obj) {
-    let r = {}
-    Object.keys(obj.xml).forEach(n => {
-        r[n] = obj.xml[n]._cdata
-    })
-    return r
-}
+const { xml2js } = require('../services/xml')
 
 const router = new Router({ prefix: '/pay' });
 
@@ -46,7 +38,7 @@ router.post('/getUserPay', async (ctx, next) => {
     }).then(async res => {
         console.log(res)
         if (res.status == 200) {
-            let obj = fixXmlObj(convert.xml2js(res.data, { compact: true }))
+            let obj = xml2js(res.data)
             ctx.body = await getUserPay(Object.assign({
                 wx_openid: ctx.openid,
                 money_pay: ctx.request.body.money_pay,
@@ -66,7 +58,7 @@ router.post('/unifiedorder', async (ctx, next) => {
     }).then(async res => {
         console.log(res)
         if (res.status == 200) {
-            let obj = fixXmlObj(convert.xml2js(res.data, { compact: true }))
+            let obj = xml2js(res.data)
             console.log('obj', obj)
             if (obj.return_code == 'SUCCESS' && obj.result_code == 'SUCCESS') {
                 let r = {
