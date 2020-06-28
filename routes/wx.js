@@ -67,18 +67,18 @@ router.post('/wx', async (ctx, next) => {
     }
 
     console.log(`jwtToken:${ctx.jwtToken}`)
-    console.log(`xml:${JSON.stringify(body.xml)}`)
     await next()
     console.log('res body', ctx.body)
-    let myId = xmlData.ToUserName[0]
+    let myId = xmlData.ToUserName
     let replyObject = {
         ToUserName: openid,
         FromUserName: myId,
-        CreateTime: xmlData.CreateTime[0]
+        CreateTime: xmlData.CreateTime
     }
     let ret = Object.assign(replyObject, ctx.body)
 
     ctx.set('Content-Type', 'text/xml');
+    console.log('ret', js2xml(ret))
     ctx.body = js2xml(ret)
 });
 

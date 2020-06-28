@@ -6,7 +6,7 @@ const xmlBuilder = new xml2js.Builder({ headless: true, cdata: true, rootName: "
 function fixXmlObj(obj) {
     let r = {}
     Object.keys(obj.xml).forEach(n => {
-        r[n] = obj.xml[n]._cdata
+        r[n] = obj.xml[n]._cdata || obj.xml[n]._text
     })
     return r
 }
