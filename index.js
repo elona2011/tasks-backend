@@ -1,7 +1,6 @@
 const { port, websitePath, staticPath } = require('./config')
 const Koa = require('koa');
 const koaBody = require('koa-body');
-const xmlParser = require('koa-xml-body')
 const serve = require('koa-static');
 const apiRouter = require('./routes/api')
 const payRouter = require('./routes/pay')
@@ -9,7 +8,6 @@ const wxRouter = require('./routes/wx')
 const publish = require('./routes/publish')
 const { initSql } = require('./sql')
 const response = require('./middleware/response')
-const bodyParser = require('koa-bodyparser');
 const mount = require('koa-mount');
 const { setMenu } = require('./services/wx')
 
@@ -20,10 +18,7 @@ const app = new Koa();
 // app.use(serve(staticPath))
 app.use(mount('/home', serve(staticPath)))
 app.use(mount('/', serve(websitePath)))
-app.use(koaBody())
-// app.use(bodyParser({
-//     enableTypes: ['json', 'xml']
-// }))
+app.use(koaBody({ multipart: true }))
 
 app.use(async function (ctx, next) {
     const str = `:method*****:url*****:body`

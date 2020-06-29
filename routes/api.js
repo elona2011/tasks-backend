@@ -62,4 +62,17 @@ router.post('/updatetask', async (ctx, next) => {
     })
 })
 
+router.post('/upload', async (ctx, next) => {
+    console.log('/upload', ctx.request.body)
+    const file = ctx.request.files.file;
+    const reader = fs.createReadStream(file.path);
+    const stream = fs.createWriteStream(path.join(os.tmpdir(), Math.random().toString()));
+    reader.pipe(stream);
+    console.log('uploading %s -> %s', file.name, stream.path);
+    ctx.body = {
+        code: 0,
+        result: 0,
+    }
+})
+
 module.exports = router

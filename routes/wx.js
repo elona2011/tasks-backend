@@ -1,4 +1,3 @@
-// const xml2js = require("xml2js")
 const { createHash } = require('crypto');
 const jwt = require('jsonwebtoken')
 const { jwt_key, token } = require('../config')
@@ -8,17 +7,6 @@ const Router = require("@koa/router")
 const router = new Router();
 const sign = require('../services/sign')
 const { js2xml, xml2js } = require('../services/xml')
-
-// const getXmlValue = function (ctx, field) {
-//     if (!ctx.xmlData) return
-//     return ctx.xmlData[field][0]
-// }
-// const getOpenId = function (ctx) {
-//     if (ctx.openId) return ctx.openId
-//     let openId = ctx.openId = getXmlValue(ctx, "FromUserName")
-//     return openId
-// }
-// const xmlBuilder = new xml2js.Builder({ headless: true, cdata: true, rootName: "xml" });
 
 //异步接收微信支付结果通知的回调地址
 router.post('/pay/wxpay', async (ctx, next) => {
