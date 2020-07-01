@@ -1,4 +1,5 @@
-const { sql_user, sql_password, getOk, getRes } = require('../config')
+const { sql_user, sql_password } = require('../config')
+const { getOk, getRes } = require('../returnCode')
 const mysql = require('mysql')
 
 pool = mysql.createPool({

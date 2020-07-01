@@ -5,7 +5,9 @@ const setOpenid = require('../middleware/setOpenid')
 const fs = require('fs')
 const path = require('path')
 const os = require('os');
-const { img_dir, getRes } = require('../config')
+const { img_dir } = require('../config')
+const { getRes } = require('../returnCode')
+
 // const { ocrTest } = require('../services/ocr')
 
 const router = new Router({ prefix: '/api' });

@@ -41,4 +41,12 @@ module.exports = {
             });
         })
     },
+    async updateLoginTime({ wx_openid }) {
+        return new Promise((res, rej) => {
+            pool.query(`update table_user set login_num=login_num+1,last_login_time=CURRENT_TIMESTAMP where wx_openid='${wx_openid}'`, function (error, results, fields) {
+                if (error) rej(error);
+                res(results)
+            });
+        })
+    },
 }

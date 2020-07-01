@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
-const { verifyOpenid, addDyAccount } = require('../sql/account')
-const { jwt_key, getRes } = require('../config')
+const { verifyOpenid, updateLoginTime } = require('../sql/account')
+const { jwt_key } = require('../config')
+const { getRes } = require('../returnCode')
 
 const setOpenid = async (ctx, next) => {
     console.log(ctx.request.body.token)
@@ -16,6 +17,7 @@ const setOpenid = async (ctx, next) => {
         return ctx.body = getRes('openidNotFound')
     }
     ctx.openid = result[0].wx_openid
+    updateLoginTime({ wx_openid: ctx.openid })
 
     await next()
 }

@@ -2,7 +2,8 @@ const Router = require("@koa/router")
 const { getUserPay, getUserMoney, getUserPayDetail, saveUnifiedorder } = require('../sql/pay')
 const setOpenid = require('../middleware/setOpenid')
 const { userPay, unifiedorder } = require('../services/pay')
-const { getRes, getOk, mch_appid } = require('../config')
+const { mch_appid } = require('../config')
+const { getOk, getRes } = require('../returnCode')
 const { sign } = require('../services/sign')
 const { xml2js } = require('../services/xml')
 
@@ -25,11 +26,16 @@ router.post('/getUserPayDetail', async (ctx, next) => {
 })
 router.post('/getUserPay', async (ctx, next) => {
     console.log('/getUserPay', ctx.request.body)
-    if (ctx.request.body.money_pay > 500) {
-        return ctx.body = getRes('moneyLarger')
-    }
     if (ctx.request.body.money_pay < 100) {
         return ctx.body = getRes('moneySmaller')
+    }
+    moneyObj = await getUserMoney({
+        wx_openid: ctx.openid,
+    })
+    if (moneyObj.code != 0) {
+        return ctx.body = getRes('openidNotFound')
+    } else if (ctx.request.body.money_pay > moneyObj.result.money) {
+        return ctx.body = getRes('moneyNotEnough')
     }
     await userPay({
         amount: ctx.request.body.money_pay,

@@ -1,4 +1,5 @@
-const { sql_user, sql_password, getOk, getRes } = require('../config')
+const { sql_user, sql_password } = require('../config')
+const { getOk, getRes } = require('../returnCode')
 const mysql = require('mysql')
 const { getNameByType } = require('../services/utils')
 
@@ -13,65 +14,68 @@ module.exports = {
     async addPublish(obj) {
         return new Promise((res, rej) => {
             let money = obj.follow_price * obj.follow_num + obj.thumb_price * obj.thumb_num + obj.comment_price * obj.comment_num
-            pool.query(`insert into table_publish (wx_openid,money,url,follow_num,follow_money,thumb_num,thumb_money,comment_num,comment_money) \
+            pool.query(`update table_user set money=money-${money},money_publish=money_publish+${money} \
+                    where wx_openid='${obj.wx_openid}' and money>=${money}`, function (error, results, fields) {
+                if (error) {
+                    console.log('error', error)
+                    return rej(error);
+                }
+                if (results.affectedRows == 1) {
+                    pool.query(`insert into table_publish (wx_openid,money,url,follow_num,follow_money,thumb_num,thumb_money,comment_num,comment_money) \
                         values ('${obj.wx_openid}','${money}','${obj.url}','${obj.follow_num}','${obj.follow_price}',\
                         '${obj.thumb_num}','${obj.thumb_price}','${obj.comment_num}','${obj.comment_price}')`
-                , function (error, results, fields) {
-                    if (error) {
-                        console.log('error', error)
-                        return rej(error);
-                    }
-                    console.log('results', results)
-                    if (results.affectedRows == 1) {
-                        let p1 = new Promise((res, rej) => {
-                            pool.query(`insert into table_task (wx_openid_publish,table_publish_id,task_money,task_url,task_type,task_num) \
+                        , function (error, results, fields) {
+                            if (error) {
+                                console.log('error', error)
+                                return rej(error);
+                            }
+                            console.log('results', results)
+                            if (results.affectedRows == 1) {
+                                let p1 = new Promise((res, rej) => {
+                                    pool.query(`insert into table_task (wx_openid_publish,table_publish_id,task_money,task_url,task_type,task_num) \
                                     values ('${obj.wx_openid}',${results.insertId},'${obj.follow_price}','${obj.url}','关注','${obj.follow_num}')`
-                                , function (error, results, fields) {
-                                    if (error) {
-                                        console.log('error', error)
-                                        return rej(error);
-                                    }
-                                    res(results)
-                                });
-                        })
-                        let p2 = new Promise((res, rej) => {
-                            pool.query(`insert into table_task (wx_openid_publish,table_publish_id,task_money,task_url,task_type,task_num) \
+                                        , function (error, results, fields) {
+                                            if (error) {
+                                                console.log('error', error)
+                                                return rej(error);
+                                            }
+                                            res(results)
+                                        });
+                                })
+                                let p2 = new Promise((res, rej) => {
+                                    pool.query(`insert into table_task (wx_openid_publish,table_publish_id,task_money,task_url,task_type,task_num) \
                                     values ('${obj.wx_openid}',${results.insertId},'${obj.thumb_price}','${obj.url}','点赞','${obj.thumb_num}')`
-                                , function (error, results, fields) {
-                                    if (error) {
-                                        console.log('error', error)
-                                        return rej(error);
-                                    }
-                                    res(results)
-                                });
-                        })
-                        let p3 = new Promise((res, rej) => {
-                            pool.query(`insert into table_task (wx_openid_publish,table_publish_id,task_money,task_url,task_type,task_num) \
+                                        , function (error, results, fields) {
+                                            if (error) {
+                                                console.log('error', error)
+                                                return rej(error);
+                                            }
+                                            res(results)
+                                        });
+                                })
+                                let p3 = new Promise((res, rej) => {
+                                    pool.query(`insert into table_task (wx_openid_publish,table_publish_id,task_money,task_url,task_type,task_num) \
                                     values ('${obj.wx_openid}',${results.insertId},'${obj.comment_price}','${obj.url}','评论','${obj.comment_num}')`
-                                , function (error, results, fields) {
-                                    if (error) {
-                                        console.log('error', error)
-                                        return rej(error);
-                                    }
+                                        , function (error, results, fields) {
+                                            if (error) {
+                                                console.log('error', error)
+                                                return rej(error);
+                                            }
+                                            res(results)
+                                        });
+                                })
+
+                                Promise.all([p1, p2, p3]).then(() => {
                                     res(results)
-                                });
-                        })
-                        let p4 = new Promise((res, rej) => {
-                            pool.query(`update table_user set money=money-${money},money_publish=money_publish+${money} where wx_openid='${obj.wx_openid}'`, function (error, results, fields) {
-                                if (error) {
-                                    console.log('error', error)
-                                    return rej(error);
-                                }
-                                res(results)
-                            });
-                        })
-                        Promise.all([p1, p2, p3, p4]).then(() => {
-                            res(results)
-                        }).catch(err => {
-                            rej(err)
-                        })
-                    }
-                });
+                                }).catch(err => {
+                                    rej(err)
+                                })
+                            }
+                        });
+                } else {
+                    res(getRes('moneyNotEnough'))
+                }
+            });
         })
     },
     async publishMy({ wx_openid }) {
