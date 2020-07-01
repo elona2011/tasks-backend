@@ -5,7 +5,7 @@ const { addUser, getToken } = require('../sql/account')
 const { saveUnifiedorder } = require('../sql/pay')
 const Router = require("@koa/router")
 const router = new Router();
-const sign = require('../services/sign')
+const { sign } = require('../services/sign')
 const { js2xml, xml2js } = require('../services/xml')
 
 //异步接收微信支付结果通知的回调地址

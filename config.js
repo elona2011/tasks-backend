@@ -7,6 +7,7 @@ module.exports = {
     sql_password: '123456',
     jwt_key: 'abcdef',
     hostname: 'http://xxx',
+    img_dir: '/website',
     getRes(name) {
         const r = {
             openidNotFound: 1,
@@ -16,6 +17,7 @@ module.exports = {
             moneyLarger: 5,
             moneyPayFail: 6,
             moneySmaller: 7,
+            noFile: 20,
             dbFail: 100
         }
         return {

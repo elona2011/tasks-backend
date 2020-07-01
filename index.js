@@ -10,14 +10,17 @@ const { initSql } = require('./sql')
 const response = require('./middleware/response')
 const mount = require('koa-mount');
 const { setMenu } = require('./services/wx')
+// const {ocrTest} = require('./services/ocr')
 
-setMenu()
+// ocrTest()
+// setMenu()
 initSql()
 const app = new Koa();
 
 // app.use(serve(staticPath))
 app.use(mount('/home', serve(staticPath)))
 app.use(mount('/', serve(websitePath)))
+app.use(mount('/img', serve(websitePath)))
 app.use(koaBody({ multipart: true }))
 
 app.use(async function (ctx, next) {

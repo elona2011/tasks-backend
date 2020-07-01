@@ -3,7 +3,7 @@ const { getUserPay, getUserMoney, getUserPayDetail, saveUnifiedorder } = require
 const setOpenid = require('../middleware/setOpenid')
 const { userPay, unifiedorder } = require('../services/pay')
 const { getRes, getOk, mch_appid } = require('../config')
-const sign = require('../services/sign')
+const { sign } = require('../services/sign')
 const { xml2js } = require('../services/xml')
 
 const router = new Router({ prefix: '/pay' });

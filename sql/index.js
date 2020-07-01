@@ -79,6 +79,7 @@ module.exports = {
                     task_num int,\
                     task_used_num int default 0,\
                     task_finish_num int default 0,\
+                    wx_openid_publish varchar(100) default '',\
                     dy_openid varchar(100) default '',\
                     access_token varchar(1000) default ''\
                 );`, function (error, results, fields) {
@@ -94,8 +95,10 @@ module.exports = {
                     task_money int,\
                     task_type varchar(50),\
                     task_state int,\
+                    task_img varchar(100),\
                     dy_id varchar(50) default '',\
                     dy_name varchar(50) default '',\
+                    wx_openid_publish varchar(100) default '',\
                     dy_openid varchar(100) default '',\
                     access_token varchar(1000) default ''\
                 );`, function (error, results, fields) {

@@ -1,5 +1,5 @@
 const Router = require("@koa/router")
-const { addPublish, publishMy, getPublishById, editPublishTask } = require('../sql/publish')
+const { addPublish, publishMy, getPublishById, editPublishTask, publishTaskView, publishCheck } = require('../sql/publish')
 const setOpenid = require('../middleware/setOpenid')
 
 const router = new Router({ prefix: '/api' });
@@ -57,6 +57,31 @@ router.post('/editPublishTask', async (ctx, next) => {
     ctx.body = {
         code: 0,
         result: null,
+    }
+})
+
+router.post('/publishTaskView', async (ctx, next) => {
+    console.log('/publishTaskView', ctx.request.body)
+    let result = await publishTaskView({
+        id: ctx.request.body.id,
+        wx_openid: ctx.openid,
+    })
+    ctx.body = {
+        code: 0,
+        result,
+    }
+})
+
+router.post('/publishCheck', async (ctx, next) => {
+    console.log('/publishCheck', ctx.request.body)
+    let result = await publishCheck({
+        id: ctx.request.body.id,
+        pass: ctx.request.body.pass,
+        wx_openid: ctx.openid,
+    })
+    ctx.body = {
+        code: 0,
+        result,
     }
 })
 

@@ -1,5 +1,6 @@
 const { sql_user, sql_password, getOk, getRes } = require('../config')
 const mysql = require('mysql')
+const { getNameByType } = require('../services/utils')
 
 pool = mysql.createPool({
     host: 'localhost',
@@ -8,10 +9,6 @@ pool = mysql.createPool({
     database: "mydb"
 })
 
-function getNameByType(task_type) {
-    console.log('task_type', task_type, typeof (task_type))
-    return task_type == '关注' ? 'follow' : (task_type == '点赞' ? 'thumb' : 'comment')
-}
 module.exports = {
     async newtasks({ wx_openid }) {
         return new Promise((res, rej) => {
@@ -48,13 +45,14 @@ module.exports = {
                 if (error) rej(error);
                 console.log(results)
                 if (results.affectedRows == 1) {
-                    pool.query(`select task_type,table_publish_id,task_money from table_task where id=${id}`, function (error, results, fields) {
+                    pool.query(`select task_type,table_publish_id,task_money,wx_openid_publish from table_task where id=${id}`, function (error, results, fields) {
                         if (error) rej(error);
                         if (results.length) {
-                            let { task_type, table_publish_id, task_money } = results[0]
+                            let { task_type, table_publish_id, task_money, wx_openid_publish } = results[0]
 
                             let p1 = new Promise((res, rej) => {
-                                pool.query(`insert into table_user_task (wx_openid,table_task_id,table_publish_id,task_money,task_type,task_state) values ('${wx_openid}','${id}','${table_publish_id}','${task_money}','${task_type}','1')`, function (error, results, fields) {
+                                pool.query(`insert into table_user_task (wx_openid,table_task_id,table_publish_id,task_money,task_type,task_state,wx_openid_publish) \
+                                values ('${wx_openid}','${id}','${table_publish_id}','${task_money}','${task_type}','1','${wx_openid_publish}')`, function (error, results, fields) {
                                     if (error) rej(error);
                                     res(results)
                                 });
@@ -91,51 +89,51 @@ module.exports = {
             });
         })
     },
-    async updatetask({ id, wx_openid }) {
+    async updatetask({ id, wx_openid, img }) {
         return new Promise((res, rej) => {
-            pool.query(`update table_user_task set task_state=3 where id=${id}`, function (error, results, fields) {
+            pool.query(`update table_user_task set task_state=2,task_img='${img}' where id=${id} and wx_openid='${wx_openid}'`, function (error, results, fields) {
                 if (error) rej(error);
                 if (results.affectedRows == 1) {
                     pool.query(`select table_task_id,table_publish_id,task_money,task_type from table_user_task where id=${id}`, function (error, results, fields) {
                         if (error) rej(error);
                         if (results.length) {
                             let { table_task_id, table_publish_id, task_money, task_type } = results[0]
-                            let p0 = new Promise((res, rej) => {
-                                pool.query(`update table_task set task_finish_num=task_finish_num+1 where id=${table_task_id}`, function (error, results, fields) {
-                                    if (error) rej(error);
-                                    if (results.affectedRows == 1) {
-                                        res()
-                                    }
-                                });
-                            })
-                            let name = getNameByType(task_type) + '_finish_num'
-                            let p3 = new Promise((res, rej) => {
-                                pool.query(`update table_publish set ${name}=${name}+1 where id=${table_publish_id}`, function (error, results, fields) {
-                                    if (error) rej(error);
-                                    if (results.affectedRows == 1) {
-                                        res()
-                                    }
-                                });
-                            })
-                            let p1 = new Promise((res, rej) => {
-                                pool.query(`update table_user set money=money+${task_money} where wx_openid='${wx_openid}'`, function (error, results, fields) {
-                                    if (error) {
-                                        console.log(error)
-                                        rej(error);
-                                    }
-                                    console.log('results', results)
-                                    if (results.affectedRows == 1) {
-                                        res()
-                                    }
-                                });
-                            })
+                            // let p0 = new Promise((res, rej) => {
+                            //     pool.query(`update table_task set task_finish_num=task_finish_num+1 where id=${table_task_id}`, function (error, results, fields) {
+                            //         if (error) rej(error);
+                            //         if (results.affectedRows == 1) {
+                            //             res()
+                            //         }
+                            //     });
+                            // })
+                            // let name = getNameByType(task_type) + '_finish_num'
+                            // let p3 = new Promise((res, rej) => {
+                            //     pool.query(`update table_publish set ${name}=${name}+1 where id=${table_publish_id}`, function (error, results, fields) {
+                            //         if (error) rej(error);
+                            //         if (results.affectedRows == 1) {
+                            //             res()
+                            //         }
+                            //     });
+                            // })
+                            // let p1 = new Promise((res, rej) => {
+                            //     pool.query(`update table_user set money=money+${task_money} where wx_openid='${wx_openid}'`, function (error, results, fields) {
+                            //         if (error) {
+                            //             console.log(error)
+                            //             rej(error);
+                            //         }
+                            //         console.log('results', results)
+                            //         if (results.affectedRows == 1) {
+                            //             res()
+                            //         }
+                            //     });
+                            // })
                             let p2 = new Promise((res, rej) => {
                                 pool.query(`select table_task_id,task_money,task_type,task_state,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=${id}`, function (error, results, fields) {
                                     if (error) rej(error);
                                     res(getOk(results[0]))
                                 });
                             })
-                            Promise.all([p2, p1, p0, p3]).then(re => {
+                            Promise.all([p2]).then(re => {
                                 res(re[0])
                             })
                         }

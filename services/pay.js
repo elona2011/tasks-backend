@@ -2,7 +2,7 @@ const axios = require('axios').default;
 const https = require('https')
 const fs = require('fs')
 const { mch_appid, mchid, hostname, cert } = require('../config')
-const sign = require('./sign')
+const { sign } = require('./sign')
 const { js2xml } = require('./xml')
 
 module.exports = {
