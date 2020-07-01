@@ -76,7 +76,7 @@ router.post('/updatetask', async (ctx, next) => {
     ctx.body = await updatetask({
         wx_openid: ctx.openid,
         id: ctx.request.body.id,
-        img: '/' + imgName,
+        img: '/img/' + imgName,
         task_state: 2
     })
 })
