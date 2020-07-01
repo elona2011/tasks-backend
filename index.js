@@ -1,4 +1,4 @@
-const { port, websitePath, staticPath } = require('./config')
+const { port, websitePath, staticPath, img_dir } = require('./config')
 const Koa = require('koa');
 const koaBody = require('koa-body');
 const serve = require('koa-static');
@@ -20,7 +20,7 @@ const app = new Koa();
 // app.use(serve(staticPath))
 app.use(mount('/home', serve(staticPath)))
 app.use(mount('/', serve(websitePath)))
-app.use(mount('/img', serve(websitePath)))
+app.use(mount('/img', serve(img_dir)))
 app.use(koaBody({ multipart: true }))
 
 app.use(async function (ctx, next) {

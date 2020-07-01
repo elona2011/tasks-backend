@@ -77,7 +77,7 @@ router.post('/publishCheck', async (ctx, next) => {
     let result = await publishCheck({
         id: ctx.request.body.id,
         pass: ctx.request.body.pass,
-        wx_openid: ctx.openid,
+        wx_openid_publish: ctx.openid,
     })
     ctx.body = {
         code: 0,

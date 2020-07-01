@@ -83,16 +83,16 @@ module.exports = {
             });
         })
     },
-    async publishCheck({ id, pass, wx_openid }) {
+    async publishCheck({ id, pass, wx_openid_publish }) {
         return new Promise((res, rej) => {
             if (pass) {
-                pool.query(`update table_user_task set task_state=3 where id=${id} and wx_openid_publish='${wx_openid}'`, function (error, results, fields) {
+                pool.query(`update table_user_task set task_state=3 where id=${id} and wx_openid_publish='${wx_openid_publish}'`, function (error, results, fields) {
                     if (error) rej(error);
                     if (results.affectedRows == 1) {
-                        pool.query(`select table_task_id,table_publish_id,task_money,task_type from table_user_task where id=${id}`, function (error, results, fields) {
+                        pool.query(`select wx_openid,table_task_id,table_publish_id,task_money,task_type from table_user_task where id=${id}`, function (error, results, fields) {
                             if (error) rej(error);
                             if (results.length) {
-                                let { table_task_id, table_publish_id, task_money, task_type } = results[0]
+                                let { wx_openid,table_task_id, table_publish_id, task_money, task_type } = results[0]
                                 let p0 = new Promise((res, rej) => {
                                     pool.query(`update table_task set task_finish_num=task_finish_num+1 where id=${table_task_id}`, function (error, results, fields) {
                                         if (error) rej(error);
@@ -138,7 +138,7 @@ module.exports = {
                     }
                 });
             } else {
-                pool.query(`update table_user_task set task_state=1 where id=${id} and wx_openid_publish='${wx_openid}'`, function (error, results, fields) {
+                pool.query(`update table_user_task set task_state=1 where id=${id} and wx_openid_publish='${wx_openid_publish}'`, function (error, results, fields) {
                     if (error) rej(error);
                     if (results.affectedRows == 1) {
                         pool.query(`select table_task_id,table_publish_id,task_money,task_type from table_user_task where id=${id}`, function (error, results, fields) {
