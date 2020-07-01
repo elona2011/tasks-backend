@@ -1,5 +1,6 @@
 const { port, websitePath, staticPath, img_dir } = require('./config')
 const Koa = require('koa');
+const compress = require('koa-compress')
 const koaBody = require('koa-body');
 const serve = require('koa-static');
 const apiRouter = require('./routes/api')
@@ -17,6 +18,15 @@ const { setMenu } = require('./services/wx')
 initSql()
 const app = new Koa();
 
+app.use(compress({
+    threshold: 2048,
+    // gzip: {
+    //     flush: require('zlib').Z_SYNC_FLUSH
+    // },
+    // deflate: {
+    //     flush: require('zlib').Z_SYNC_FLUSH,
+    // },
+}))
 // app.use(serve(staticPath))
 app.use(mount('/home', serve(staticPath)))
 app.use(mount('/', serve(websitePath)))
