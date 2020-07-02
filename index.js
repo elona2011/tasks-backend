@@ -14,7 +14,7 @@ const { setMenu } = require('./services/wx')
 // const {ocrTest} = require('./services/ocr')
 
 // ocrTest()
-setMenu()
+// setMenu()
 initSql()
 const app = new Koa();
 
