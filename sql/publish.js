@@ -80,7 +80,8 @@ module.exports = {
     },
     async publishMy({ wx_openid }) {
         return new Promise((res, rej) => {
-            pool.query(`select id,state,url,comment_num,comment_finish_num,follow_num,follow_finish_num,thumb_num,thumb_finish_num from table_publish where wx_openid='${wx_openid}' `, function (error, results, fields) {
+            pool.query(`select id,state,url,comment_num,comment_finish_num,follow_num,follow_finish_num,thumb_num,thumb_finish_num,\
+            (select count(*) from mydb.table_user_task where table_publish_id=a.id and task_state=2) as state2num from mydb.table_publish a where wx_openid='${wx_openid}' `, function (error, results, fields) {
                 if (error) {
                     console.log('error', error)
                     return rej(error);
