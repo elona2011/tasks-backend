@@ -8,9 +8,10 @@ router.use(setOpenid)
 
 router.post('/publish', async (ctx, next) => {
     console.log('/publish', ctx.request.body)
+    let url = ctx.request.body.videoUrl.replace(/[\u{10000}-\u{10FFFF}]/gu, '')
     await addPublish({
         wx_openid: ctx.openid,
-        url: ctx.request.body.videoUrl,
+        url,
         follow_num: ctx.request.body.follow,
         follow_price: ctx.request.body.followPrice,
         comment_num: ctx.request.body.comment,
