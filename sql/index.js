@@ -65,6 +65,13 @@ module.exports = {
                 );`, function (error, results, fields) {
                 if (error) throw error;
                 console.log('The solution is: ', results);
+
+                pool.query(`alter table table_publish 
+                    add column video_name text, 
+                    add column qr_code varchar(100);`, function (error, results, fields) {
+                    if (error) throw error;
+                    console.log(`alter table 'table_publish',The solution is: `, results);
+                });
             });
 
             pool.query(`create table if not exists table_task (\

@@ -91,7 +91,7 @@ module.exports = {
     },
     async getPublishById({ id, wx_openid }) {
         return new Promise((res, rej) => {
-            pool.query(`select id,state,url,comment_num,comment_finish_num,follow_num,follow_finish_num,thumb_num,thumb_finish_num from table_publish where id=? `, [id], function (error, results, fields) {
+            pool.query(`select id,state,url,comment_num,comment_finish_num,follow_num,follow_finish_num,thumb_num,thumb_finish_num from table_publish where wx_openid=? and id=? `, [wx_openid, id], function (error, results, fields) {
                 if (error) {
                     console.log('error', error)
                     return rej(error);
@@ -102,7 +102,7 @@ module.exports = {
     },
     async publishTaskView({ id, wx_openid }) {
         return new Promise((res, rej) => {
-            pool.query(`select id,task_img,table_task_id from table_user_task where table_publish_id=? and task_state=2`, [id], function (error, results, fields) {
+            pool.query(`select id,task_img,table_task_id from table_user_task where wx_openid=? and table_publish_id=? and task_state=2`, [wx_openid, id], function (error, results, fields) {
                 if (error) {
                     console.log('error', error)
                     return rej(error);
@@ -211,9 +211,9 @@ module.exports = {
             }
         })
     },
-    async editPublishTask({ id, state }) {
+    async editPublishTask({ id, state, wx_openid }) {
         let p0 = new Promise((res, rej) => {
-            pool.query(`update table_publish set state=? where id=?`, [state, id], function (error, results, fields) {
+            pool.query(`update table_publish set state=? where wx_openid=? and id=?`, [state, wx_openid, id], function (error, results, fields) {
                 if (error) {
                     console.log('error', error)
                     return rej(error);
@@ -222,7 +222,7 @@ module.exports = {
             });
         })
         let p1 = new Promise((res, rej) => {
-            pool.query(`update table_task set state=? where table_publish_id=?`, [state, id], function (error, results, fields) {
+            pool.query(`update table_task set state=? where wx_openid=? and table_publish_id=?`, [state, wx_openid, id], function (error, results, fields) {
                 if (error) {
                     console.log('error', error)
                     return rej(error);

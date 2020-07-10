@@ -34,7 +34,7 @@ module.exports = {
             });
         })
     },
-    async getTask(id) {
+    async getTask({ wx_openid, id }) {
         return new Promise((res, rej) => {
             pool.query(`select id,task_type,task_num,task_used_num,task_finish_num,task_url from table_task where id=?`, [id], function (error, results, fields) {
                 if (error) {
@@ -99,9 +99,9 @@ module.exports = {
             });
         })
     },
-    async usertask({ id }) {
+    async usertask({ wx_openid, id }) {
         return new Promise((res, rej) => {
-            pool.query(`select table_task_id,task_money,task_type,task_state,task_img,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=?`, [id], function (error, results, fields) {
+            pool.query(`select table_task_id,task_money,task_type,task_state,task_img,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where wx_openid=? and id=?`, [wx_openid, id], function (error, results, fields) {
                 if (error) {
                     console.log('error', error)
                     return rej(error);

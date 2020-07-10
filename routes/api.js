@@ -39,7 +39,10 @@ router.post('/mytasks', async (ctx, next) => {
 
 router.post('/gettask', async (ctx, next) => {
     console.log('/gettask', ctx.request.body)
-    ctx.body = await getTask(ctx.request.body.id)
+    ctx.body = await getTask({
+        wx_openid: ctx.openid,
+        id: ctx.request.body.id
+    })
 })
 
 router.post('/starttask', async (ctx, next) => {
@@ -75,12 +78,12 @@ router.post('/updatetask', async (ctx, next) => {
     })
     reader.pipe(stream);
     console.log('uploading %s -> %s', file.name, stream.path);
-    ctx.body = await updatetask({
-        wx_openid: ctx.openid,
-        id: ctx.request.body.id,
-        img: '/img/' + imgName,
-        task_state: 2
-    })
+    // ctx.body = await updatetask({
+    //     wx_openid: ctx.openid,
+    //     id: ctx.request.body.id,
+    //     img: '/img/' + imgName,
+    //     task_state: 2
+    // })
 })
 
 // router.post('/upload', async (ctx, next) => {

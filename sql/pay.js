@@ -24,7 +24,7 @@ module.exports = {
     },
     async getUserPayDetail({ wx_openid, id }) {
         return new Promise((res, rej) => {
-            pool.query(`select result_code from table_pay where id=?`, [id], function (error, results, fields) {
+            pool.query(`select result_code from table_pay where wx_openid=? and id=?`, [wx_openid, id], function (error, results, fields) {
                 if (error) rej(error);
                 if (results.length) {
                     res(getOk(results[0]))
