@@ -180,7 +180,7 @@ module.exports = {
         });
     },
     routineCheck() {
-        setInterval(routineCheck, 1000 * 60)
+        setInterval(routineCheck, 1000 * 60 * 60)
     }
 }
 
