@@ -7,7 +7,7 @@ const apiRouter = require('./routes/api')
 const payRouter = require('./routes/pay')
 const wxRouter = require('./routes/wx')
 const publish = require('./routes/publish')
-const { initSql } = require('./sql')
+const { initSql,routineCheck } = require('./sql')
 const response = require('./middleware/response')
 const mount = require('koa-mount');
 const { setMenu } = require('./services/wx')
@@ -16,6 +16,7 @@ const { setMenu } = require('./services/wx')
 // ocrTest()
 // setMenu()
 initSql()
+routineCheck()
 const app = new Koa();
 
 app.use(compress({

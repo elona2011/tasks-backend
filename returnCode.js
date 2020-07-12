@@ -1,4 +1,4 @@
-module.exports={
+module.exports = {
     getRes(name) {
         const r = {
             openidNotFound: 1,
@@ -10,7 +10,9 @@ module.exports={
             moneySmaller: 7,
             moneyNotEnough: 8,
             noFile: 20,
-            dbFail: 100
+            typeErr: 40,
+            dbFail: 100,
+            unknown: 999
         }
         return {
             code: r[name]

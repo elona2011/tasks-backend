@@ -1,5 +1,7 @@
 const { sql_user, sql_password } = require('../config')
 const mysql = require('mysql')
+const { addColumn } = require('./utils')
+const { routineCheck } = require('./publish')
 
 module.exports = {
     initSql() {
@@ -66,12 +68,22 @@ module.exports = {
                 if (error) throw error;
                 console.log('The solution is: ', results);
 
-                pool.query(`alter table table_publish 
-                    add column video_name text, 
-                    add column qr_code varchar(100);`, function (error, results, fields) {
-                    if (error) throw error;
-                    console.log(`alter table 'table_publish',The solution is: `, results);
-                });
+                addColumn({
+                    tableName: 'table_publish',
+                    columnName: 'task_dywx',
+                    columnType: 'varchar(10)',
+                    defaultValue: "'dy'"
+                })
+                addColumn({
+                    tableName: 'table_publish',
+                    columnName: 'video_name',
+                    columnType: 'text'
+                })
+                addColumn({
+                    tableName: 'table_publish',
+                    columnName: 'qr_code',
+                    columnType: 'varchar(100)'
+                })
             });
 
             pool.query(`create table if not exists table_task (\
@@ -92,6 +104,23 @@ module.exports = {
                 );`, function (error, results, fields) {
                 if (error) throw error;
                 console.log('The solution is: ', results);
+
+                addColumn({
+                    tableName: 'table_task',
+                    columnName: 'task_dywx',
+                    columnType: 'varchar(10)',
+                    defaultValue: "'dy'"
+                })
+                addColumn({
+                    tableName: 'table_task',
+                    columnName: 'video_name',
+                    columnType: 'text'
+                })
+                addColumn({
+                    tableName: 'table_task',
+                    columnName: 'qr_code',
+                    columnType: 'varchar(100)'
+                })
             });
 
             pool.query(`create table if not exists table_user_task (\
@@ -111,6 +140,12 @@ module.exports = {
                 );`, function (error, results, fields) {
                 if (error) throw error;
                 console.log('The solution is: ', results);
+                addColumn({
+                    tableName: 'table_user_task',
+                    columnName: 'create_time',
+                    columnType: 'DATETIME',
+                    defaultValue: "CURRENT_TIMESTAMP"
+                })
             });
 
             pool.query(`create table if not exists table_pay (\
@@ -143,6 +178,9 @@ module.exports = {
                 console.log('The solution is: ', results);
             });
         });
+    },
+    routineCheck() {
+        setInterval(routineCheck, 1000 * 60)
     }
 }
 
