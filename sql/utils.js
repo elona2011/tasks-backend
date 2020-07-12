@@ -48,7 +48,6 @@ module.exports = {
     addColumn({ tableName, columnName, columnType, defaultValue }) {
         pool.query(`SELECT NULL FROM INFORMATION_SCHEMA.COLUMNS \
                         WHERE TABLE_SCHEMA='mydb' AND TABLE_NAME='${tableName}' AND column_name='${columnName}';`, (error, results) => {
-            console.log('123', results)
             if (!results.length) {
                 if (defaultValue != undefined) {
                     pool.query(`ALTER TABLE mydb.${tableName} ADD ${columnName} ${columnType} DEFAULT ${defaultValue};`, function (error, results, fields) {

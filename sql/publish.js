@@ -36,18 +36,11 @@ module.exports = {
             return getRes('moneyNotEnough')
         }
     }),
-    async publishMy({ wx_openid }) {
-        return new Promise((res, rej) => {
-            pool.query(`select id,state,url,comment_num,comment_finish_num,follow_num,follow_finish_num,thumb_num,thumb_finish_num,\
-            (select count(*) from mydb.table_user_task where table_publish_id=a.id and task_state=2) as state2num from mydb.table_publish a where wx_openid=? `, [wx_openid], function (error, results, fields) {
-                if (error) {
-                    console.log('error', error)
-                    return rej(error);
-                }
-                res(results)
-            });
-        })
-    },
+    publishMy: tc(async ({ wx_openid }) => {
+        let r = await query(`select id,state,url,video_name,task_dywx,comment_num,comment_finish_num,follow_num,follow_finish_num,thumb_num,thumb_finish_num,\
+        (select count(*) from mydb.table_user_task where table_publish_id=a.id and task_state=2) as state2num from mydb.table_publish a where wx_openid=? `, [wx_openid])
+        return getOk(r)
+    }),
     async getPublishById({ id, wx_openid }) {
         return new Promise((res, rej) => {
             pool.query(`select id,state,url,comment_num,comment_finish_num,follow_num,follow_finish_num,thumb_num,thumb_finish_num from table_publish where wx_openid=? and id=? `, [wx_openid, id], function (error, results, fields) {

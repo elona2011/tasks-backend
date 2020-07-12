@@ -62,13 +62,9 @@ router.post('/publish', async (ctx, next) => {
 
 router.post('/publishMy', async (ctx, next) => {
     console.log('/publishMy', ctx.request.body)
-    let result = await publishMy({
+    ctx.body = await publishMy({
         wx_openid: ctx.openid,
     })
-    ctx.body = {
-        code: 0,
-        result,
-    }
 })
 
 router.post('/getPublishById', async (ctx, next) => {
