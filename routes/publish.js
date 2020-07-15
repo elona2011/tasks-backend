@@ -4,6 +4,7 @@ const setOpenid = require('../middleware/setOpenid')
 const fs = require('fs')
 const path = require('path')
 const { img_dir } = require('../config')
+const { getOk, getRes } = require('../returnCode')
 
 const router = new Router({ prefix: '/api' });
 
@@ -11,10 +12,11 @@ router.use(setOpenid)
 
 router.post('/publish', async (ctx, next) => {
     console.log('/publish', ctx.request.body)
-    if (ctx.request.body.videoUrl) {
+    if (ctx.request.body.type == 'dy') {
         let url = ctx.request.body.videoUrl.replace(/[\u{10000}-\u{10FFFF}]/gu, '')
-        await addPublish({
+        ctx.body = await addPublish({
             wx_openid: ctx.openid,
+            task_dywx: ctx.request.body.type,
             url,
             follow_num: ctx.request.body.follow,
             follow_price: ctx.request.body.followPrice,
@@ -23,14 +25,16 @@ router.post('/publish', async (ctx, next) => {
             thumb_num: ctx.request.body.thumb,
             thumb_price: ctx.request.body.thumbPrice,
         })
-    } else {
+    } else if (ctx.request.body.type == 'wx') {
         const file = ctx.request.files.imgCode;
         if (!file) {
             return ctx.body = getRes('noFile')
         }
         const reader = fs.createReadStream(file.path);
         const imgName = Math.random().toString() + '.jpg'
-        const stream = fs.createWriteStream(path.join(img_dir, imgName));
+        let img_path = path.join(img_dir, imgName)
+        console.log('img_path', img_path)
+        const stream = fs.createWriteStream(img_path);
         stream.on('finish', () => {
             console.log('finish')
             let img64 = fs.readFileSync(stream.path, 'base64')
@@ -39,10 +43,11 @@ router.post('/publish', async (ctx, next) => {
         })
         reader.pipe(stream);
         console.log('uploading %s -> %s', file.name, stream.path);
-        await addPublish({
+        ctx.body = await addPublish({
             wx_openid: ctx.openid,
-            video_name: ctx.request.body.video_name,
-            img_code: stream.path,
+            task_dywx: ctx.request.body.type,
+            video_name: ctx.request.body.videoName,
+            qr_code: '/img/' + imgName,
             follow_num: ctx.request.body.follow,
             follow_price: ctx.request.body.followPrice,
             comment_num: ctx.request.body.comment,
@@ -50,22 +55,16 @@ router.post('/publish', async (ctx, next) => {
             thumb_num: ctx.request.body.thumb,
             thumb_price: ctx.request.body.thumbPrice,
         })
-    }
-    ctx.body = {
-        code: 0,
-        result: 0,
+    } else {
+        ctx.body = getRes('typeErr')
     }
 })
 
 router.post('/publishMy', async (ctx, next) => {
     console.log('/publishMy', ctx.request.body)
-    let result = await publishMy({
+    ctx.body = await publishMy({
         wx_openid: ctx.openid,
     })
-    ctx.body = {
-        code: 0,
-        result,
-    }
 })
 
 router.post('/getPublishById', async (ctx, next) => {
@@ -107,15 +106,11 @@ router.post('/publishTaskView', async (ctx, next) => {
 
 router.post('/publishCheck', async (ctx, next) => {
     console.log('/publishCheck', ctx.request.body)
-    let result = await publishCheck({
+    ctx.body = await publishCheck({
         id: ctx.request.body.id,
         pass: ctx.request.body.pass,
         wx_openid_publish: ctx.openid,
     })
-    ctx.body = {
-        code: 0,
-        result,
-    }
 })
 
 router.post('/publishPay', async (ctx, next) => {
