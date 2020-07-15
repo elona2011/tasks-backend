@@ -26,11 +26,11 @@ const setMenu = async () => {
         },
         data: {
             "button": [
-                {
-                    "type": "click",
-                    "name": "发布任务📋",
-                    "key": "publish"
-                },
+                // {
+                //     "type": "click",
+                //     "name": "发布任务📋",
+                //     "key": "publish"
+                // },
                 {
                     "type": "click",
                     "name": "做任务🔧",
@@ -38,11 +38,11 @@ const setMenu = async () => {
                 }, {
                     "name": "我的🎁",
                     "sub_button": [
-                        {
-                            "type": "click",
-                            "name": "点我充值💰",
-                            "key": "moneyIn"
-                        },
+                        // {
+                        //     "type": "click",
+                        //     "name": "点我充值💰",
+                        //     "key": "moneyIn"
+                        // },
                         {
                             "type": "click",
                             "name": "点我提现💹",

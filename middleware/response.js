@@ -1,6 +1,6 @@
 const response = async ctx => {
     switch (ctx.Content) {
-        case 'publish':
+        case 'publish task':
             ctx.body = {
                 Content: `<a href="http://p.wechat.ac.cn/home/#/publish/new/${ctx.jwtToken}">点击发布任务📋</a>`,
                 MsgType: 'text'
@@ -21,6 +21,12 @@ const response = async ctx => {
         case 'moneyOut':
             ctx.body = {
                 Content: `<a href="http://p.wechat.ac.cn/home/#/user/pay/${ctx.jwtToken}">点击提现💹</a>`,
+                MsgType: 'text'
+            };
+            break;
+        default:
+            ctx.body = {
+                Content: `<a href="http://p.wechat.ac.cn/home/#/user/new/${ctx.jwtToken}">点击做任务🔧</a>`,
                 MsgType: 'text'
             };
             break;
