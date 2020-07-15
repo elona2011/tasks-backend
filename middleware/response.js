@@ -1,6 +1,6 @@
 const response = async ctx => {
     switch (ctx.Content) {
-        case 'publish task':
+        case 'pppppppp':
             ctx.body = {
                 Content: `<a href="http://p.wechat.ac.cn/home/#/publish/newtype/${ctx.jwtToken}">点击发布任务📋</a>`,
                 MsgType: 'text'
