@@ -13,7 +13,6 @@ const mount = require('koa-mount');
 const { setMenu } = require('./services/wx')
 // const {ocrTest} = require('./services/ocr')
 
-// console.log(require('./services/xml').js2xml({ Image: { MediaId: 1 } }))
 // ocrTest()
 // setMenu()
 initSql()

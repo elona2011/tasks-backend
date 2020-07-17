@@ -26,9 +26,11 @@ const response = async ctx => {
             break;
         case 'qrcode':
             ctx.body = {
-                MsgType: 'image',
+                MsgType: { '_cdata': 'image' },
                 Image: {
-                    MediaId: 'mmexport1594978686462'
+                    MediaId: {
+                        "_cdata": 'mmexport1594978686462'
+                    }
                 }
             };
             break;
