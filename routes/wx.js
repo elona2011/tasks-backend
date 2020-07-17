@@ -6,7 +6,7 @@ const { saveUnifiedorder } = require('../sql/pay')
 const Router = require("@koa/router")
 const router = new Router();
 const { sign } = require('../services/sign')
-const { js2xml, xml2js } = require('../services/xml')
+const { js2xml, js2xml2, xml2js } = require('../services/xml')
 
 //异步接收微信支付结果通知的回调地址
 router.post('/pay/wxpay', async (ctx) => {
@@ -56,6 +56,44 @@ router.post('/wx', async (ctx, next) => {
     console.log('res body', ctx.body)
     let myId = xmlData.ToUserName
     let replyObject = {
+        ToUserName: openid,
+        FromUserName: myId,
+        CreateTime: xmlData.CreateTime
+    }
+    let ret = Object.assign(replyObject, ctx.body)
+
+    ctx.set('Content-Type', 'text/xml');
+    console.log('ret', js2xml(ret))
+    ctx.body = js2xml(ret)
+});
+
+router.post('/wx1', async (ctx, next) => {
+    // ctx.router available
+    let body = ctx.request.body
+    let xmlData = xml2js(body)
+    ctx.xmlData = xmlData
+    console.log('xmlData', xmlData)
+    // ctx.msgType = getXmlValue(ctx, "MsgType")
+    ctx.Content = xmlData.EventKey || xmlData.Content
+    let openid = xmlData.FromUserName
+    // let openid = 'aaa'
+    try {
+        let result = await getToken(openid)
+        if (result.length >= 1) {
+            ctx.jwtToken = result[0].jwt
+        } else {
+            ctx.jwtToken = jwt.sign({ openid }, jwt_key)
+            await addUser(openid, ctx.jwtToken)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+    console.log(`jwtToken:${ctx.jwtToken}`)
+    await next()
+    console.log('res body', ctx.body)
+    let myId = xmlData.ToUserName
+    let replyObject = {
         ToUserName: { '_cdata': openid },
         FromUserName: { '_cdata': myId },
         CreateTime: xmlData.CreateTime
@@ -63,7 +101,7 @@ router.post('/wx', async (ctx, next) => {
     let ret = Object.assign(replyObject, ctx.body)
 
     ctx.set('Content-Type', 'text/xml');
-    console.log('ret', js2xml(ret))
+    console.log('ret', js2xml2(ret))
     ctx.body = js2xml(ret)
 });
 
