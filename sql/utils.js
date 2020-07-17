@@ -13,26 +13,6 @@ const codes = {
     'affectedRowsErr': 'affectedRowsErr'
 }
 
-const query = (sql, values = []) => new Promise((res, rej) => {
-    pool.query(sql, values, function (error, results, fields) {
-        if (error) {
-            console.log('sql error:', sql, values, error)
-            return rej(error);
-        }
-        // switch (queryType) {
-        //     case 'insert':
-        //     case 'update':
-        //         if (results.affectedRows != 1) {
-        //             console.warn('affectedRowsErr', sql, values)
-        //             return rej(new Error(codes.affectedRowsErr))
-        //         }
-        //         break
-        // }
-
-        res(results)
-    })
-})
-
 module.exports = {
     codes,
     tc(fn) {

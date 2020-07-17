@@ -56,15 +56,15 @@ router.post('/wx', async (ctx, next) => {
     console.log('res body', ctx.body)
     let myId = xmlData.ToUserName
     let replyObject = {
-        ToUserName: openid,
-        FromUserName: myId,
+        ToUserName: { '_cdata': openid },
+        FromUserName: { '_cdata': myId },
         CreateTime: xmlData.CreateTime
     }
     let ret = Object.assign(replyObject, ctx.body)
 
     ctx.set('Content-Type', 'text/xml');
-    console.log('ret', js2xml(ret))
-    ctx.body = js2xml(ret)
+    console.log('ret', js2xml2(ret))
+    ctx.body = js2xml2({ xml: ret })
 });
 
 router.post('/wx1', async (ctx, next) => {
@@ -102,7 +102,7 @@ router.post('/wx1', async (ctx, next) => {
 
     ctx.set('Content-Type', 'text/xml');
     console.log('ret', js2xml2(ret))
-    ctx.body = js2xml(ret)
+    ctx.body = js2xml2({ xml: ret })
 });
 
 // for wx config
