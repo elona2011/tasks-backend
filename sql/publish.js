@@ -54,7 +54,7 @@ module.exports = {
     },
     async publishTaskView({ id, wx_openid }) {
         return new Promise((res, rej) => {
-            pool.query(`select id,task_img,table_task_id from table_user_task where wx_openid=? and table_publish_id=? and task_state=2`, [wx_openid, id], function (error, results, fields) {
+            pool.query(`select id,task_img,table_task_id from table_user_task where wx_openid_publish=? and table_publish_id=? and task_state=2`, [wx_openid, id], function (error, results, fields) {
                 if (error) {
                     console.log('error', error)
                     return rej(error);
