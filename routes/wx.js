@@ -56,8 +56,8 @@ router.post('/wx', async (ctx, next) => {
     console.log('res body', ctx.body)
     let myId = xmlData.ToUserName
     let replyObject = {
-        ToUserName: openid,
-        FromUserName: myId,
+        ToUserName: { '_cdata': openid },
+        FromUserName: { '_cdata': myId },
         CreateTime: xmlData.CreateTime
     }
     let ret = Object.assign(replyObject, ctx.body)
