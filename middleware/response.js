@@ -24,6 +24,14 @@ const response = async ctx => {
                 MsgType: 'text'
             };
             break;
+        case 'qrcode':
+            ctx.body = {
+                MsgType: 'image',
+                Image: {
+                    MediaId: 'mmexport1594978686462'
+                }
+            };
+            break;
         default:
             ctx.body = {
                 Content: `<a href="http://p.wechat.ac.cn/home/#/user/new/${ctx.jwtToken}">点击做任务🔧</a>`,

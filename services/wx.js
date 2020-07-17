@@ -45,6 +45,11 @@ const setMenu = async () => {
                         // },
                         {
                             "type": "click",
+                            "name": "一起赚钱💰",
+                            "key": "qrcode"
+                        },
+                        {
+                            "type": "click",
                             "name": "点我提现💹",
                             "key": "moneyOut"
                         }]

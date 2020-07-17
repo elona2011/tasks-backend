@@ -9,7 +9,7 @@ const { sign } = require('../services/sign')
 const { js2xml, xml2js } = require('../services/xml')
 
 //异步接收微信支付结果通知的回调地址
-router.post('/pay/wxpay', async (ctx, next) => {
+router.post('/pay/wxpay', async (ctx) => {
     console.log('/pay/wxpay', ctx.request.body)
     let xmlData = xml2js(ctx.request.body)
     console.log('xmlData', xmlData)
@@ -75,7 +75,7 @@ const encrypt = (algorithm, content) => {
 }
 const sha1 = (content) => encrypt('sha1', content)
 
-router.get('/wx', (ctx, next) => {
+router.get('/wx', (ctx) => {
     let { echostr, timestamp, nonce, signature } = ctx.request.query
     let arr = [token, timestamp, nonce]
     arr.sort()

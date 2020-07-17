@@ -4,7 +4,7 @@ const mysql = require('mysql')
 const { getNameByType } = require('../services/utils')
 const { query, queryTestLength, queryTestAffectedRows, tc } = require('./utils')
 
-pool = mysql.createPool({
+let pool = mysql.createPool({
     host: 'localhost',
     user: sql_user,
     password: sql_password,
@@ -61,19 +61,19 @@ module.exports = {
     }),
     async updatetask({ id, wx_openid, img }) {
         return new Promise((res, rej) => {
-            pool.query(`update table_user_task set task_state=2,task_img=? where id=? and wx_openid=?`, [img, id, wx_openid], function (error, results, fields) {
+            pool.query(`update table_user_task set task_state=2,task_img=? where id=? and wx_openid=?`, [img, id, wx_openid], function (error, results) {
                 if (error) {
                     console.log('error', error)
                     return rej(error);
                 }
                 if (results.affectedRows == 1) {
-                    pool.query(`select table_task_id,table_publish_id,task_money,task_type from table_user_task where id=?`, [id], function (error, results, fields) {
+                    pool.query(`select table_task_id,table_publish_id,task_money,task_type from table_user_task where id=?`, [id], function (error, results) {
                         if (error) {
                             console.log('error', error)
                             return rej(error);
                         }
                         if (results.length) {
-                            let { table_task_id, table_publish_id, task_money, task_type } = results[0]
+                            // let { table_task_id, table_publish_id, task_money, task_type } = results[0]
                             // let p0 = new Promise((res, rej) => {
                             //     pool.query(`update table_task set task_finish_num=task_finish_num+1 where id=${table_task_id}`, function (error, results, fields) {
                             //         if (error) {
@@ -110,7 +110,7 @@ module.exports = {
                             //     });
                             // })
                             let p2 = new Promise((res, rej) => {
-                                pool.query(`select table_task_id,task_money,task_type,task_state,task_img,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=?`, [id], function (error, results, fields) {
+                                pool.query(`select table_task_id,task_money,task_type,task_state,task_img,(select task_url from mydb.table_task where id=table_task_id) as task_url from mydb.table_user_task where id=?`, [id], function (error, results) {
                                     if (error) {
                                         console.log('error', error)
                                         return rej(error);

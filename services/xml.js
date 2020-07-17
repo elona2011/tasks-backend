@@ -14,6 +14,7 @@ function fixXmlObj(obj) {
 module.exports = {
     js2xml(obj) {
         let xml = xmlBuilder.buildObject(obj)
+        console.log('xml', xml)
         return xml
     },
     xml2js(xml) {
