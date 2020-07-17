@@ -33,7 +33,7 @@ const response = async ctx => {
                 MsgType: { '_cdata': 'image' },
                 Image: {
                     MediaId: {
-                        "_cdata": 'mmexport1594978686462'
+                        "_cdata": '3rowYwTyBvMrdKos-fLkTp0E1SA1DVcJq7VgfFKgAxK62MC75QGL6xmV8dSHEfg_'
                     }
                 }
             };

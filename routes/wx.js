@@ -67,44 +67,6 @@ router.post('/wx', async (ctx, next) => {
     ctx.body = js2xml2({ xml: ret })
 });
 
-router.post('/wx1', async (ctx, next) => {
-    // ctx.router available
-    let body = ctx.request.body
-    let xmlData = xml2js(body)
-    ctx.xmlData = xmlData
-    console.log('xmlData', xmlData)
-    // ctx.msgType = getXmlValue(ctx, "MsgType")
-    ctx.Content = xmlData.EventKey || xmlData.Content
-    let openid = xmlData.FromUserName
-    // let openid = 'aaa'
-    try {
-        let result = await getToken(openid)
-        if (result.length >= 1) {
-            ctx.jwtToken = result[0].jwt
-        } else {
-            ctx.jwtToken = jwt.sign({ openid }, jwt_key)
-            await addUser(openid, ctx.jwtToken)
-        }
-    } catch (error) {
-        console.log(error)
-    }
-
-    console.log(`jwtToken:${ctx.jwtToken}`)
-    await next()
-    console.log('res body', ctx.body)
-    let myId = xmlData.ToUserName
-    let replyObject = {
-        ToUserName: { '_cdata': openid },
-        FromUserName: { '_cdata': myId },
-        CreateTime: xmlData.CreateTime
-    }
-    let ret = Object.assign(replyObject, ctx.body)
-
-    ctx.set('Content-Type', 'text/xml');
-    console.log('ret', js2xml2(ret))
-    ctx.body = js2xml2({ xml: ret })
-});
-
 // for wx config
 const encrypt = (algorithm, content) => {
     let hash = createHash(algorithm)
