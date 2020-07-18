@@ -82,7 +82,7 @@ module.exports = {
     }),
     routineCheck: tc(async () => {
         console.log('routineCheck start:', new Date)
-        let r = await query('select id,wx_openid,table_task_id,table_publish_id,task_money,task_type from mydb.table_user_task where task_state=2 and create_time < NOW() - INTERVAL 3 DAY')
+        let r = await query('select id,wx_openid,table_task_id,table_publish_id,task_money,task_type from mydb.table_user_task where task_state=2 and create_time < NOW() - INTERVAL 1 DAY')
         if (r.length) {
             r.forEach(async n => {
                 await query(`update mydb.table_user_task set task_state=3 where id=${n.id}`)

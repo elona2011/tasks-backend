@@ -1,4 +1,16 @@
 const response = async ctx => {
+    switch(ctx.Event){
+        case 'subscribe':
+            ctx.body = {
+                MsgType: { '_cdata': 'image' },
+                Image: {
+                    MediaId: {
+                        "_cdata": '3rowYwTyBvMrdKos-fLkTp0E1SA1DVcJq7VgfFKgAxK62MC75QGL6xmV8dSHEfg_'
+                    }
+                }
+            };
+            return
+    }
     switch (ctx.Content) {
         case 'pppppppp':
             ctx.body = {

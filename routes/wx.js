@@ -36,6 +36,7 @@ router.post('/wx', async (ctx, next) => {
     ctx.xmlData = xmlData
     console.log('xmlData', xmlData)
     // ctx.msgType = getXmlValue(ctx, "MsgType")
+    ctx.Event = xmlData.Event
     ctx.Content = xmlData.EventKey || xmlData.Content
     let openid = xmlData.FromUserName
     // let openid = 'aaa'
