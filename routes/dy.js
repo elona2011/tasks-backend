@@ -12,3 +12,5 @@ router.post('/access_token', async (ctx) => {
         result: 0,
     }
 })
+
+module.exports = router
