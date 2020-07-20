@@ -1,0 +1,166 @@
+.banner {
+    width: 100%;
+    min-width: 1140px;
+    font-size: 0;
+}
+
+.banner>img {
+    width: 100%;
+}
+
+/* ****************************** */
+
+.artist {
+    padding: 50px 0;
+}
+
+.artist-panel {
+    width: 100%;
+}
+
+.artist-item {
+    width: 20%;
+    padding: 10px 0;
+    transition: all 0.1s;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.artist-thumb {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f7f7f7;
+}
+
+.artist-item:hover {
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.1);
+}
+
+.artist-thumb img {
+    width: 100%;
+}
+
+/* ******************************* */
+
+.live {
+    padding: 50px 0 60px;
+}
+
+.live-item {
+    width: 340px;
+    padding-bottom: 20px;
+    margin-right: 60px;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+    background: #fff;
+    cursor: pointer;
+}
+
+.trans-bg {
+    background: #f7f7f7;
+}
+
+.live-item:nth-child(3n) {
+    margin-right: 0;
+}
+
+.live-thumb {
+    width: 100%;
+    height: 605px;
+    margin-bottom: 10px;
+    font-size: 0;
+    overflow: hidden;
+}
+
+.live-item:hover {
+    background: #fff;
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
+}
+
+.live-thumb img {
+    width: 100%;
+}
+
+.live-item>h4 {
+    height: 30px;
+    margin: 0 10px;
+    font-size: 16px;
+    color: #666;
+}
+
+.live-item p {
+    margin: 0 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+}
+
+.live-item>.link {
+    display: block;
+    margin: 10px 10px 0;
+    font-size: 14px;
+    color: #0337ab;
+}
+
+/* ******************************************** */
+
+.audio {
+    padding: 60px 0;
+}
+
+.audio-summary {
+    width: 310px;
+    margin-right: 100px;
+}
+
+.audio-wrapper {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    font-size: 0;
+    overflow: hidden;
+    transition: all 0.5s;
+}
+
+.audio-wrapper:hover {
+    transform: rotate(360deg);
+}
+
+.audio-wrapper>img {
+    width: 100%;
+}
+
+.audio-info {
+    width: 100%;
+    padding: 15px 0;
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.video-panel-bottom {
+    margin-top: 60px;
+}
+
+.video-panel-bottom .audio-wrapper {
+    margin-left: 20px;
+}
+
+.video-panel-bottom .audio-wrapper:first-child {
+    margin-left: 0;
+}
+
+.dailog {
+    width: 520px;
+}

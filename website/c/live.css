@@ -1,0 +1,274 @@
+.banner {
+    width: 100%;
+    min-width: 1140px;
+    font-size: 0;
+}
+
+.banner>img {
+    width: 100%;
+}
+
+.live {
+    padding: 92px 0 50px;
+}
+
+.live-left {
+    width: 590px;
+}
+
+.live-left p {
+    text-indent: 2em;
+}
+
+.live-right {
+    align-content: flex-start;
+    width: 490px;
+    margin-top: 20px;
+}
+
+.live-video-wrapper {
+    width: 220px;
+    font-size: 0;
+    transition: all 0.1s;
+}
+
+.live-video-wrapper:hover {
+    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.5);
+}
+
+.live-video-wrapper img {
+    width: 100%;
+}
+
+.badge {
+    position: relative;
+    width: 180px;
+    padding: 20px 0;
+    margin: 0 auto 40px;
+}
+
+.badge::before {
+    position: absolute;
+    top: 0px;
+    right: -20px;
+    display: block;
+    content: ' ';
+    width: 50px;
+    border-top: 1px solid #333333;
+    transform: rotateZ(-50deg) translate3d(-20px, 10px, 3px);
+}
+
+.badge::after {
+    position: absolute;
+    bottom: -20px;
+    left: -26px;
+    display: block;
+    content: ' ';
+    width: 50px;
+    border-top: 1px solid #333333;
+    transform: rotateZ(-50deg) translate3d(30px, 10px, 3px);
+}
+
+.badge h3 {
+    font-size: 50px;
+    color: #000000;
+    font-weight: 400;
+    letter-spacing: 2px;
+}
+
+.activity {
+    width: 200px;
+    height: 135px;
+    margin-bottom: 20px;
+    transition: all 0.2s;
+}
+
+.activity:hover {
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.4);
+    transform: scale(1.02);
+}
+
+.activity img {
+    width: 100%;
+}
+
+.join-btn {
+    width: 196px;
+    height: 60px;
+    margin-top: 60px;
+    border-radius: 30px;
+    background: #f13a3a;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: #fff;
+    transition: all 0.2s;
+}
+
+.join-btn:hover {
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
+}
+
+.connect {
+    padding: 60px 0;
+    background: #f7f7f7;
+}
+
+.btn-group {
+    margin-top: 52px;
+}
+
+.btn-group .btn {
+    height: 60px;
+    margin: 0 20px;
+    border-radius: 30px;
+    background: #f13a3a;
+    font-size: 20px;
+    color: #fff;
+}
+
+.btn-group .btn-left {
+    width: 196px;
+}
+
+.btn-group .btn-right {
+    width: 318px;
+}
+
+.btn-group .btn:hover {
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
+}
+
+.line-000 {
+    width: 70px;
+    height: 10px;
+    background-color: #122134;
+}
+
+.poster-logo {
+    width: 436px;
+    height: 146px;
+    border: 10px solid #fff100;
+    box-sizing: border-box;
+}
+
+/* .poster-logo img {
+    width: 80%;
+} */
+
+.poster-join {
+    margin-right: 100px;
+}
+
+.code-summary {
+    width: 90px;
+    height: 56px;
+    background: #333333;
+}
+
+.code-summary span {
+    color: #fff100
+}
+
+.poster-qrcode {
+    width: 110px;
+    height: 110px;
+    margin-left: 20px;
+    font-size: 0;
+    box-shadow: 10px 10px #333;
+}
+
+.poster-qrcode img {
+    width: 100%;
+}
+
+.partner {
+    padding: 48px 0;
+    background: #f7f7f7;
+}
+
+.partner-panel {
+    width: 100%;
+    font-size: 0;
+}
+
+.partner-panel .partner-item {
+    width: 20%;
+    font-size: 0;
+}
+
+.partner-item .partner-thumb {
+    width: 100%;
+    font-size: 0;
+}
+
+.partner-item .partner-thumb img {
+    transition: all 0.3s;
+}
+
+.partner-item .partner-thumb img:hover {
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.1);
+}
+
+.example {
+    padding: 36px 0;
+}
+
+.e-title {
+    position: relative;
+    padding-left: 18px;
+    font-size: 24px;
+    font-weight: 400;
+    color: #333;
+}
+
+.e-title::before {
+    position: absolute;
+    left: 0;
+    display: block;
+    content: ' ';
+    width: 4px;
+    height: 30px;
+    background: #f13a3a;
+}
+
+.bg-f7 {
+    background: #f7f7f7;
+}
+
+.list {
+    margin-top: 48px;
+}
+
+.list li {
+    width: 20%;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.list li:hover {
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+}
+
+.list li:hover p {
+    color: #f13a3a;
+}
+
+.thumb {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    background: #666;
+    overflow: hidden;
+    font-size: 0;
+    transition: all 0.2s;
+}
+
+.thumb img {
+    width: 100%;
+}
+
+.dailog {
+    width: 480px;
+}

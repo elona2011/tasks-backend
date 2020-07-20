@@ -1,0 +1,286 @@
+.intro {
+    padding: 50px 0 50px;
+}
+
+.intro>p {
+    margin-bottom: 20px;
+    font-size: 17px;
+    color: #666666;
+    text-align: center;
+    word-break: break-all;
+}
+
+.intro-data {
+    width: 130px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.intro-data>h3 {
+    position: relative;
+    padding-bottom: 30px;
+    font-size: 30px;
+    font-weight: 400;
+    color: #666;
+}
+
+.intro-data>h3::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: block;
+    content: '';
+    width: 60px;
+    height: 2px;
+    background: #666;
+}
+
+.intro-data>p {
+    margin-top: 30px;
+    font-size: 16px;
+    color: #999999;
+}
+
+.intro-panel-left {
+    margin-right: 20px;
+}
+
+.intro-panel-left p {
+    text-indent: 2em;
+}
+
+.intro-panel-right {
+    width: 656px;
+    padding: 0 30px;
+    box-sizing: border-box;
+}
+
+.baidu-map {
+    width: 100%;
+    height: 248px;
+    margin-top: 24px;
+    border: 1px solid #c8c8c8;
+}
+
+/* �ֲ�ͼ */
+
+#certify {
+    position: relative;
+}
+
+#certify .swiper-slide {
+    position: relative;
+    width: 230px;
+    height: 300px;
+    background: #fff;
+    box-shadow: 0 8px 30px #ddd;
+    font-size: 0;
+}
+
+#certify .swiper-slide img {
+    display: block;
+    width: 100%;
+}
+
+#certify .swiper-slide p {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 38px;
+    line-height: 38px;
+    background: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+}
+
+#certify .swiper-button-prev {
+    width: 9px;
+    height: 18px;
+    background: url(./arrow-left.png) no-repeat;
+    background-size: 100%;
+}
+
+#certify .swiper-button-next {
+    width: 9px;
+    height: 18px;
+    background: url(./arrow-right.png) no-repeat;
+    background-size: 100%;
+}
+
+.distribution {
+    padding: 60px 0;
+    background: #f7f7f7;
+}
+
+.distribution-city {
+    width: 700px;
+}
+
+.distribution-city>p {
+    color: #666666;
+}
+
+.news {
+    padding: 62px 0 67px;
+}
+
+.news-image {
+    float: left;
+    width: 186px;
+    height: 152px;
+    margin: 0 10px 10px 0;
+}
+
+
+.news-left {
+    width: 520px;
+    font-size: 0;
+}
+
+.news-title {
+    max-width: 320px;
+    overflow: hidden;
+    font-size: 24px;
+    color: #333333;
+    font-weight: 400;
+}
+
+.news-left>p {
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.news-right {
+    width: 580px;
+}
+
+.news-right>li {
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #c8c8c8;
+    cursor: pointer;
+}
+
+.news-right>li a {
+    display: block;
+}
+
+.news-right>li h4 {
+    max-width: 400px;
+    transition: all .3s;
+}
+
+.news-right>li p {
+    transition: all .3s;
+}
+
+.news-right>li:hover h4 {
+    color: #f13a3a;
+}
+
+.news-right>li:hover p {
+    color: #f13a3a;
+}
+
+.recruit {
+    background: url('./recruit-bg.png') no-repeat;
+    background-size: cover;
+}
+
+.recruit-title {
+    margin-bottom: 45px;
+    letter-spacing: 2px;
+    font-size: 48px;
+    color: #f3e92f;
+    font-style: italic;
+}
+
+.recruit-subtitle {
+    margin-bottom: 44px;
+    font-size: 36px;
+    color: #fff;
+    font-weight: 500;
+}
+
+.btn-group a {
+    list-style: none;
+    border: none;
+    outline: none;
+    width: 196px;
+    height: 60px;
+    margin: 0 40px;
+    border-radius: 30px;
+    background: #f3e92f;
+    font-size: 24px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-group .btn-left {
+    background: transparent;
+    border: 1px solid #333;
+    color: #333;
+}
+
+.btn-group a:hover {
+    color: #f13a3a;
+    box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.5)
+}
+
+.btn-group a:active {
+    opacity: 0.8;
+}
+
+.poster {
+    padding: 62px 0 62px;
+}
+
+
+.poster-icon {
+    width: 70px;
+    height: 70px;
+}
+
+.icon-1 {
+    background: url('./poster1.png') no-repeat;
+    background-size: contain;
+}
+
+.icon-2 {
+    background: url('./poster2.png') no-repeat;
+    background-size: contain;
+}
+
+.icon-3 {
+    background: url('./poster3.png') no-repeat;
+    background-size: contain;
+}
+
+.icon-4 {
+    background: url('./poster4.png') no-repeat;
+    background-size: contain;
+}
+
+.icon-5 {
+    background: url('./poster5.png') no-repeat;
+    background-size: contain;
+}
+pur-row {
+    margin-bottom: 20px;
+}
+
+.pur-row:last-child {
+    margin-bottom: 0;
+}
+
+.pur-row .pur-title {
+    margin-left: 5px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.pur-box {
+    width: 550px;
+}
