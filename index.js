@@ -7,6 +7,7 @@ const apiRouter = require('./routes/api')
 const payRouter = require('./routes/pay')
 const wxRouter = require('./routes/wx')
 const publish = require('./routes/publish')
+const dy = require('./routes/dy')
 const { initSql, routineCheck } = require('./sql')
 const response = require('./middleware/response')
 const mount = require('koa-mount');
@@ -51,6 +52,8 @@ app.use(wxRouter.routes())
 app.use(wxRouter.allowedMethods());
 app.use(payRouter.routes())
 app.use(payRouter.allowedMethods());
+app.use(dy.routes())
+app.use(dy.allowedMethods());
 
 app.use(response);
 

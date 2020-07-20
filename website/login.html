@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script type="text/javascript" src="a/jquery.min.js"></script>
+    <script>
+        if (location.search) {
+            let r = location.search.match(/code=(.+)&/)
+            if (r.length == 2) {
+                $.ajax({
+                    url: '/dy/access_token?code='+r[1],
+                    success(res) {
+                        console.log(res)
+                    }
+                })
+            }
+        }
+    </script>
+</body>
+
+</html>
