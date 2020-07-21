@@ -13,7 +13,6 @@
         if (location.search) {
             let r = location.search.match(/code=(.+)&/)
             let isprd = /state=prd/.test(location.search)
-            alert(isprd)
             if (r.length == 2) {
                 $.ajax({
                     url: '/dy/access_token?code=' + r[1],
