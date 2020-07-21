@@ -16,17 +16,17 @@ module.exports = {
         let money = obj.follow_price * obj.follow_num + obj.thumb_price * obj.thumb_num + obj.comment_price * obj.comment_num
         let r = await query(`select wx_openid from mydb.table_user where wx_openid=? and money>=?`, [obj.wx_openid, money])
         if (r.length) {
-            let results = await queryTestAffectedRows(`insert into mydb.table_publish (wx_openid,money,task_dywx,url,video_name,qr_code,follow_num,follow_money,thumb_num,thumb_money,comment_num,comment_money) \
+            let insertId = await queryTestAffectedRows(`insert into mydb.table_publish (wx_openid,money,task_dywx,url,video_name,qr_code,follow_num,follow_money,thumb_num,thumb_money,comment_num,comment_money) \
                             values (?,?,?,?,?,?,?,?,?,?,?,?)`, [obj.wx_openid, money, obj.task_dywx, obj.url, obj.video_name, obj.qr_code, obj.follow_num, obj.follow_price, obj.thumb_num, obj.thumb_price, obj.comment_num, obj.comment_price])
 
             await queryTestAffectedRows(`insert into mydb.table_task (wx_openid_publish,table_publish_id,task_money,task_dywx,task_url,task_type,task_num,video_name,qr_code) \
-                            values (?,?,?,?,?,'关注',?,?,?)`, [obj.wx_openid, results.insertId, obj.follow_price, obj.task_dywx, obj.url, obj.follow_num, obj.video_name, obj.qr_code])
+                            values (?,?,?,?,?,'关注',?,?,?)`, [obj.wx_openid, insertId, obj.follow_price, obj.task_dywx, obj.url, obj.follow_num, obj.video_name, obj.qr_code])
 
             await queryTestAffectedRows(`insert into mydb.table_task (wx_openid_publish,table_publish_id,task_money,task_dywx,task_url,task_type,task_num,video_name,qr_code) \
-                            values (?,?,?,?,?,'点赞',?,?,?)`, [obj.wx_openid, results.insertId, obj.thumb_price, obj.task_dywx, obj.url, obj.thumb_num, obj.video_name, obj.qr_code])
+                            values (?,?,?,?,?,'点赞',?,?,?)`, [obj.wx_openid, insertId, obj.thumb_price, obj.task_dywx, obj.url, obj.thumb_num, obj.video_name, obj.qr_code])
 
             await queryTestAffectedRows(`insert into mydb.table_task (wx_openid_publish,table_publish_id,task_money,task_dywx,task_url,task_type,task_num,video_name,qr_code) \
-                            values (?,?,?,?,?,'评论',?,?,?)`, [obj.wx_openid, results.insertId, obj.comment_price, obj.task_dywx, obj.url, obj.comment_num, obj.video_name, obj.qr_code])
+                            values (?,?,?,?,?,'评论',?,?,?)`, [obj.wx_openid, insertId, obj.comment_price, obj.task_dywx, obj.url, obj.comment_num, obj.video_name, obj.qr_code])
 
             await queryTestAffectedRows(`update mydb.table_user set money=money-?,money_publish=money_publish+? \
                             where wx_openid=? and money>=?`, [money, money, obj.wx_openid, money])

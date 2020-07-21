@@ -1,7 +1,9 @@
 const { sql_user, sql_password } = require('../config')
 const mysql = require('mysql')
+const { query, queryTestLength, queryTestAffectedRows, tc } = require('./utils')
+const { getOk, getRes } = require('../returnCode')
 
-pool = mysql.createPool({
+let pool = mysql.createPool({
     host: 'localhost',
     user: sql_user,
     password: sql_password,
@@ -9,14 +11,10 @@ pool = mysql.createPool({
 })
 
 module.exports = {
-    async addUser(wx_openid, jwt) {
-        return new Promise((res, rej) => {
-            pool.query(`insert into table_user (wx_openid,jwt) values (?,?)`, [wx_openid, jwt], function (error, results, fields) {
-                if (error) rej(error);
-                res(results)
-            });
-        })
-    },
+    addUser: tc(async (wx_openid, jwt, access_token) => {
+        let insertId = await queryTestAffectedRows(`insert into table_user (wx_openid,jwt,access_token) values (?,?,?)`, [wx_openid, jwt, access_token])
+        return getOk(insertId)
+    }),
     async getToken(wx_openid) {
         return new Promise((res, rej) => {
             pool.query(`select jwt from table_user where wx_openid=?`, [wx_openid], function (error, results, fields) {

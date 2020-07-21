@@ -30,12 +30,12 @@ module.exports = {
                         WHERE TABLE_SCHEMA='mydb' AND TABLE_NAME='${tableName}' AND column_name='${columnName}';`, (error, results) => {
             if (!results.length) {
                 if (defaultValue != undefined) {
-                    pool.query(`ALTER TABLE mydb.${tableName} ADD ${columnName} ${columnType} DEFAULT ${defaultValue};`, function (error, results, fields) {
+                    pool.query(`ALTER TABLE mydb.${tableName} ADD ${columnName} ${columnType} DEFAULT ${defaultValue};`, function (error, results) {
                         if (error) throw error;
                         console.log(`alter table '${columnName}',The solution is: `, results);
                     });
                 } else {
-                    pool.query(`ALTER TABLE mydb.${tableName} ADD ${columnName} ${columnType}`, function (error, results, fields) {
+                    pool.query(`ALTER TABLE mydb.${tableName} ADD ${columnName} ${columnType}`, function (error, results) {
                         if (error) throw error;
                         console.log(`alter table '${columnName}',The solution is: `, results);
                     });
@@ -45,7 +45,7 @@ module.exports = {
     },
     query(sql, values) {
         return new Promise((res, rej) => {
-            pool.query(sql, values, function (error, results, fields) {
+            pool.query(sql, values, function (error, results) {
                 if (error) {
                     console.log('sql error:', sql, values, error)
                     return rej(error);
@@ -56,7 +56,7 @@ module.exports = {
     },
     queryTestLength(sql, values) {
         return new Promise((res, rej) => {
-            pool.query(sql, values, function (error, results, fields) {
+            pool.query(sql, values, function (error, results) {
                 if (error) {
                     console.log('sql error:', sql, values, error)
                     return rej(error);
@@ -71,7 +71,7 @@ module.exports = {
     },
     queryTestAffectedRows(sql, values) {
         return new Promise((res, rej) => {
-            pool.query(sql, values, function (error, results, fields) {
+            pool.query(sql, values, function (error, results) {
                 if (error) {
                     console.log('sql error:', sql, values, error)
                     return rej(error);
@@ -80,7 +80,7 @@ module.exports = {
                     console.log('sql affectedRows', results, sql, values)
                     return rej(new Error(codes.affectedRowsErr))
                 }
-                res(results)
+                res(results.insertId)
             })
         })
     },

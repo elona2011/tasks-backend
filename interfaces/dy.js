@@ -14,7 +14,9 @@ module.exports = {
             },
         }).then(res => {
             console.log('dy token response', res.data)
-            return res.data
+            if (res.data.message == 'success') {
+                return res.data.data
+            }
         })
     }
 }

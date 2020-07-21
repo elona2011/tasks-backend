@@ -43,13 +43,13 @@ module.exports = {
         let rr = await queryTestLength(`select task_type,table_publish_id,task_money,wx_openid_publish from mydb.table_task where id=?`, [id])
 
         let { task_type, table_publish_id, task_money, wx_openid_publish } = rr[0]
-        let r3 = await queryTestAffectedRows(`insert into mydb.table_user_task (wx_openid,table_task_id,table_publish_id,task_money,task_type,task_state,wx_openid_publish) \
+        let insertId = await queryTestAffectedRows(`insert into mydb.table_user_task (wx_openid,table_task_id,table_publish_id,task_money,task_type,task_state,wx_openid_publish) \
             values (?,?,?,?,?,'1',?)`, [wx_openid, id, table_publish_id, task_money, task_type, wx_openid_publish])
 
         let type_doing_num_name = getNameByType(task_type) + '_doing_num'
         await queryTestAffectedRows(`update mydb.table_publish set ${type_doing_num_name}=${type_doing_num_name}+1 where id=(select table_publish_id from mydb.table_task where id=?)`, [id])
 
-        return getOk(r3.insertId)
+        return getOk(insertId)
     }),
     usertask: tc(async ({ wx_openid, id }) => {
         let r = await queryTestLength(`select table_task_id,a.task_money,a.task_type,a.task_state,a.task_img,b.task_url,b.task_dywx,b.qr_code,b.video_name from mydb.table_user_task a left join mydb.table_task b on a.table_task_id = b.id where a.wx_openid=? and a.id=?`, [wx_openid, id])

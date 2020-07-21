@@ -14,9 +14,14 @@
             let r = location.search.match(/code=(.+)&/)
             if (r.length == 2) {
                 $.ajax({
-                    url: '/dy/access_token?code='+r[1],
+                    url: '/dy/access_token?code=' + r[1],
                     success(res) {
-                        console.log(res)
+                        alert(res)
+                        if (res.code == 0) {
+                            location.href = 'http://9.117.170.24/#/SingleVideoAll' + '?jwt=' + res.result
+                        } else {
+                            alert('授权登陆失败')
+                        }
                     }
                 })
             }
