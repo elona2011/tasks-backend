@@ -12,12 +12,14 @@
     <script>
         if (location.search) {
             let r = location.search.match(/code=(.+)&/)
+            let isprd = /state=prd/.test(location.search)
+            alert(isprd)
             if (r.length == 2) {
                 $.ajax({
                     url: '/dy/access_token?code=' + r[1],
                     success(res) {
                         if (res.code == 0) {
-                            location.href = 'http://9.117.170.24/#/SingleVideoAll' + '?open_id=' + res.result.open_id + '&access_token=' + res.result.access_token
+                            location.href = `http://${isprd ? 'http://video.yzm.oa.com/' : '9.117.170.24'}/#/SingleVideoAll` + '?open_id=' + res.result.open_id + '&access_token=' + res.result.access_token
                         } else {
                             alert('授权登陆失败')
                         }
