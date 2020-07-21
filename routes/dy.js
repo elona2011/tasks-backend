@@ -11,7 +11,10 @@ router.get('/access_token', async (ctx) => {
     let r = await accessToken(ctx.request.query.code)
     ctx.jwtToken = jwt.sign({ openid: r.open_id }, jwt_key)
     await addUser(r.open_id, ctx.jwtToken, r.access_token)
-    ctx.body = getOk(ctx.jwtToken)
+    ctx.body = getOk({
+        open_id: r.open_id,
+        access_token: r.access_token
+    })
 })
 
 module.exports = router

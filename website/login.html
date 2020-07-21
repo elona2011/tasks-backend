@@ -16,9 +16,8 @@
                 $.ajax({
                     url: '/dy/access_token?code=' + r[1],
                     success(res) {
-                        alert(res)
                         if (res.code == 0) {
-                            location.href = 'http://9.117.170.24/#/SingleVideoAll' + '?jwt=' + res.result
+                            location.href = 'http://9.117.170.24/#/SingleVideoAll' + '?open_id=' + res.result.open_id + '&access_token=' + res.result.access_token
                         } else {
                             alert('授权登陆失败')
                         }
