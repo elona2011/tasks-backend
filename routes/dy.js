@@ -13,7 +13,8 @@ router.get('/access_token', async (ctx) => {
     await addUser(r.open_id, ctx.jwtToken, r.access_token)
     ctx.body = getOk({
         open_id: r.open_id,
-        access_token: r.access_token
+        access_token: r.access_token,
+        expires_in:r.expires_in,
     })
 })
 
