@@ -1,12 +1,28 @@
-const { createHash } = require('crypto');
+const {
+    createHash
+} = require('crypto');
 const jwt = require('jsonwebtoken')
-const { jwt_key, token } = require('../config')
-const { addUser, getToken } = require('../sql/account')
-const { saveUnifiedorder } = require('../sql/pay')
+const {
+    jwt_key,
+    token
+} = require('../config')
+const {
+    addUser,
+    getToken
+} = require('../sql/account')
+const {
+    saveUnifiedorder
+} = require('../sql/pay')
 const Router = require("@koa/router")
 const router = new Router();
-const { sign } = require('../services/sign')
-const { js2xml, js2xml2, xml2js } = require('../services/xml')
+const {
+    sign
+} = require('../services/sign')
+const {
+    js2xml,
+    js2xml2,
+    xml2js
+} = require('../services/xml')
 
 //异步接收微信支付结果通知的回调地址
 router.post('/pay/wxpay', async (ctx) => {
@@ -29,6 +45,11 @@ router.post('/pay/wxpay', async (ctx) => {
     }
 })
 
+router.get('/wx/access_token', async ctx => {
+    return {a:1}
+})
+
+//公众号
 router.post('/wx', async (ctx, next) => {
     // ctx.router available
     let body = ctx.request.body
@@ -45,7 +66,9 @@ router.post('/wx', async (ctx, next) => {
         if (result.length >= 1) {
             ctx.jwtToken = result[0].jwt
         } else {
-            ctx.jwtToken = jwt.sign({ openid }, jwt_key)
+            ctx.jwtToken = jwt.sign({
+                openid
+            }, jwt_key)
             await addUser(openid, ctx.jwtToken)
         }
     } catch (error) {
@@ -57,15 +80,21 @@ router.post('/wx', async (ctx, next) => {
     console.log('res body', ctx.body)
     let myId = xmlData.ToUserName
     let replyObject = {
-        ToUserName: { '_cdata': openid },
-        FromUserName: { '_cdata': myId },
+        ToUserName: {
+            '_cdata': openid
+        },
+        FromUserName: {
+            '_cdata': myId
+        },
         CreateTime: xmlData.CreateTime
     }
     let ret = Object.assign(replyObject, ctx.body)
 
     ctx.set('Content-Type', 'text/xml');
     console.log('ret', js2xml2(ret))
-    ctx.body = js2xml2({ xml: ret })
+    ctx.body = js2xml2({
+        xml: ret
+    })
 });
 
 // for wx config
@@ -77,7 +106,12 @@ const encrypt = (algorithm, content) => {
 const sha1 = (content) => encrypt('sha1', content)
 
 router.get('/wx', (ctx) => {
-    let { echostr, timestamp, nonce, signature } = ctx.request.query
+    let {
+        echostr,
+        timestamp,
+        nonce,
+        signature
+    } = ctx.request.query
     let arr = [token, timestamp, nonce]
     arr.sort()
     let str = arr.join("")
