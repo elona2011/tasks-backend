@@ -46,7 +46,7 @@ router.post('/pay/wxpay', async (ctx) => {
 })
 
 router.get('/wx/access_token', async ctx => {
-    return {a:1}
+    ctx.body = {a:1}
 })
 
 //公众号

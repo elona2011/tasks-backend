@@ -39,7 +39,7 @@ app.use(async function (ctx, next) {
     const str = `:method*****:url*****:body`
         .replace(':method', ctx.method)
         .replace(':url', ctx.url)
-        .replace(':body', ctx.request.body)
+        .replace(':body', JSON.stringify(ctx.request.body))
 
     console.log(str);
     await next()
