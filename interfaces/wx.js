@@ -18,10 +18,7 @@ module.exports = {
                 return res.data.data
             }
         })
-    }
-}
-
-module.exports = {
+    },
     getUserInfo(access_token,openid) {
         return axios({
             method: 'get',
