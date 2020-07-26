@@ -29,8 +29,8 @@ module.exports = {
             },
         }).then(res => {
             console.log('wx getUserInfo response', res.data)
-            if (res.data.message == 'success') {
-                return res.data.data
+            if (res.data.unionid) {
+                return res.data
             }
         })
     }
