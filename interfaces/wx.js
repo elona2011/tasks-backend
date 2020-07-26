@@ -14,8 +14,8 @@ module.exports = {
             },
         }).then(res => {
             console.log('wx token response', res.data)
-            if (res.data.message == 'success') {
-                return res.data.data
+            if (res.data.access_token) {
+                return res.data
             }
         })
     },
