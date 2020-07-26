@@ -23,6 +23,7 @@ const {
     js2xml2,
     xml2js
 } = require('../services/xml')
+const {accessToken,getUserInfo} = require('../interfaces/wx')
 
 //异步接收微信支付结果通知的回调地址
 router.post('/pay/wxpay', async (ctx) => {
@@ -46,7 +47,18 @@ router.post('/pay/wxpay', async (ctx) => {
 })
 
 router.get('/wx/access_token', async ctx => {
-    ctx.body = {a:1}
+    let r = await accessToken(ctx.request.query.code)
+    let rr=await getUserInfo(r.access_token,r.openid)
+    let result = await getToken(rr.unionid)
+    if(result.length){
+        ctx.jwtToken = result[0].jwt
+    }else{
+        ctx.jwtToken = jwt.sign({
+            unionid:r.unionid
+        }, jwt_key)
+        await addUser(r.unionid, ctx.jwtToken,r.access_token)
+    }
+    ctx.body = {jwt:ctx.jwtToken}
 })
 
 //公众号

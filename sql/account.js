@@ -22,7 +22,7 @@ module.exports = {
     }),
     async getToken(wx_openid) {
         return new Promise((res, rej) => {
-            pool.query(`select jwt from table_user where wx_openid=?`, [wx_openid], function (error, results, fields) {
+            pool.query(`select jwt from table_user where wx_openid=?`, [wx_openid], function (error, results) {
                 if (error) rej(error);
                 res(results)
             });
@@ -30,7 +30,7 @@ module.exports = {
     },
     async verifyOpenid(wx_openid) {
         return new Promise((res, rej) => {
-            pool.query(`select wx_openid from table_user where wx_openid=?`, [wx_openid], function (error, results, fields) {
+            pool.query(`select wx_openid from table_user where wx_openid=?`, [wx_openid], function (error, results) {
                 if (error) rej(error);
                 res(results)
             });
@@ -38,7 +38,7 @@ module.exports = {
     },
     async addDyAccount({ wx_openid, dy_name, dy_id }) {
         return new Promise((res, rej) => {
-            pool.query(`update table_user set dy_name=?, dy_id=? where wx_openid=?`, [dy_name, dy_id, wx_openid], function (error, results, fields) {
+            pool.query(`update table_user set dy_name=?, dy_id=? where wx_openid=?`, [dy_name, dy_id, wx_openid], function (error, results) {
                 if (error) rej(error);
                 res(results)
             });

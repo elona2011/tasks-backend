@@ -11,7 +11,7 @@ const setOpenid = async (ctx, next) => {
     } catch (error) {
         return ctx.body = getRes('openidNotFound')
     }
-    let result = await verifyOpenid(decoded.openid || decoded.userOpenId)
+    let result = await verifyOpenid(decoded.openid || decoded.userOpenId || decoded.unionid)
     console.log(result)
     if (result.length != 1) {
         return ctx.body = getRes('openidNotFound')
