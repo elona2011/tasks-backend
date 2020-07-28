@@ -11,7 +11,7 @@ module.exports = {
             password: sql_password,
         })
 
-        pool.query(`create database if not exists mydb;`, function (error, results, fields) {
+        pool.query(`create database if not exists mydb;`, function (error, results) {
             if (error) throw error;
             console.log('The solution is: ', results);
 
@@ -37,9 +37,19 @@ module.exports = {
                                 login_num int default 1,\
                                 last_login_time DATETIME DEFAULT CURRENT_TIMESTAMP,\
                                 is_subscribe BOOL default true\
-                            );`, function (error, results, fields) {
+                            );`, function (error, results) {
                 if (error) throw error;
                 console.log('The solution is: ', results);
+                // addColumn({
+                //     tableName: 'table_user',
+                //     columnName: 'wx_openid_new',
+                //     columnType: 'varchar(100)',
+                // })
+                // addColumn({
+                //     tableName: 'table_user',
+                //     columnName: 'wx_access_token',
+                //     columnType: 'varchar(1000)',
+                // })
             });
 
             pool.query(`create table if not exists table_publish (\
@@ -64,7 +74,7 @@ module.exports = {
                     comment_finish_num int default 0,\
                     comment_doing_num int default 0,\
                     comment_money int\
-                );`, function (error, results, fields) {
+                );`, function (error, results) {
                 if (error) throw error;
                 console.log('The solution is: ', results);
 

@@ -52,7 +52,7 @@ const response = async ctx => {
             break;
         default:
             ctx.body = {
-                Content: { '_cdata': `<a href="http://p.wechat.ac.cn/home/#/user/new/${ctx.jwtToken}">点击做任务🔧</a>` },
+                Content: { '_cdata': `谢谢你关注我` },
                 MsgType: { '_cdata': 'text' }
             };
             break;

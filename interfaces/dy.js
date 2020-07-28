@@ -18,5 +18,22 @@ module.exports = {
                 return res.data.data
             }
         })
+    },
+    accessTokenApp(code) {
+        return axios({
+            method: 'get',
+            url: `https://open.douyin.com/oauth/access_token`,
+            params: {
+                client_key: dyClientKey,
+                client_secret: dyClientSecret,
+                code,
+                grant_type: 'authorization_code'
+            },
+        }).then(res => {
+            console.log('dy token response', res.data)
+            if (res.data.message == 'success') {
+                return res.data.data
+            }
+        })
     }
 }
