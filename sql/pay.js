@@ -25,7 +25,7 @@ module.exports = {
     getUserMoney: tc(async ({
         wx_openid
     }) => {
-        let r = await query(`select money,money_pay,wx_openid_new from table_user where wx_openid=?`, [wx_openid])
+        let r = await query(`select money,money_pay,wx_openid_new from mydb.table_user where wx_openid=?`, [wx_openid])
         if (r.length) {
             return getOk(r[0])
         } else {
