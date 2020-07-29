@@ -26,9 +26,9 @@ router.post('/getUserPayDetail', async (ctx, next) => {
 })
 router.post('/getUserPay', async (ctx, next) => {
     console.log('/getUserPay', ctx.request.body)
-    if (ctx.request.body.money_pay < 100) {
-        return ctx.body = getRes('moneySmaller')
-    }
+    // if (ctx.request.body.money_pay < 100) {
+    //     return ctx.body = getRes('moneySmaller')
+    // }
     const moneyObj = await getUserMoney({
         wx_openid: ctx.openid,
     })
