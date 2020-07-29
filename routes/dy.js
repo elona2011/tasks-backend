@@ -10,7 +10,7 @@ const router = new Router({ prefix: '/dy' });
 router.get('/access_token', async (ctx) => {
     let r = await accessToken(ctx.request.query.code)
     ctx.jwtToken = jwt.sign({ openid: r.open_id }, jwt_key)
-    await addUser(r.open_id, ctx.jwtToken, r.access_token)
+    await addUser(r.open_id, ctx.jwtToken, r.access_token,r.open_id)
     ctx.body = getOk({
         open_id: r.open_id,
         access_token: r.access_token,
@@ -21,7 +21,7 @@ router.get('/access_token', async (ctx) => {
 router.get('/access_token_app', async (ctx) => {
     let r = await accessTokenApp(ctx.request.query.code)
     ctx.jwtToken = jwt.sign({ openid: r.open_id }, jwt_key)
-    await addUser(r.open_id, ctx.jwtToken, r.access_token)
+    await addUser(r.open_id, ctx.jwtToken, r.access_token,r.open_id)
     ctx.body = getOk({
         open_id: r.open_id,
         access_token: r.access_token,

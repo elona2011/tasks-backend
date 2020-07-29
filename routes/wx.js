@@ -56,7 +56,7 @@ router.get('/wx/access_token', async ctx => {
         ctx.jwtToken = jwt.sign({
             unionid:r.unionid
         }, jwt_key)
-        await addUser(r.unionid, ctx.jwtToken,r.access_token)
+        await addUser(r.unionid, ctx.jwtToken,r.access_token,r.openid)
     }
     ctx.body = {jwt:ctx.jwtToken}
 })

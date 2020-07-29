@@ -29,7 +29,7 @@ router.post('/getUserPay', async (ctx, next) => {
     if (ctx.request.body.money_pay < 100) {
         return ctx.body = getRes('moneySmaller')
     }
-    moneyObj = await getUserMoney({
+    const moneyObj = await getUserMoney({
         wx_openid: ctx.openid,
     })
     if (moneyObj.code != 0) {
@@ -39,8 +39,8 @@ router.post('/getUserPay', async (ctx, next) => {
     }
     await userPay({
         amount: ctx.request.body.money_pay,
-        openid: ctx.openid,
-        desc: "评赞任务奖励"
+        openid: moneyObj.result.wx_openid_new,
+        desc: "工作任务奖励"
     }).then(async res => {
         console.log(res)
         if (res.status == 200) {

@@ -40,11 +40,11 @@ module.exports = {
                             );`, function (error, results) {
                 if (error) throw error;
                 console.log('The solution is: ', results);
-                // addColumn({
-                //     tableName: 'table_user',
-                //     columnName: 'wx_openid_new',
-                //     columnType: 'varchar(100)',
-                // })
+                addColumn({
+                    tableName: 'table_user',
+                    columnName: 'wx_openid_new',
+                    columnType: 'varchar(100)',
+                })
                 // addColumn({
                 //     tableName: 'table_user',
                 //     columnName: 'wx_access_token',
