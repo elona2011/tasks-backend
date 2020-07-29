@@ -52,6 +52,7 @@ router.get('/wx/access_token', async ctx => {
     let result = await getToken(rr.unionid)
     if(result.length){
         ctx.jwtToken = result[0].jwt
+        await addUser(r.unionid, ctx.jwtToken,r.access_token,r.openid)
     }else{
         ctx.jwtToken = jwt.sign({
             unionid:r.unionid
