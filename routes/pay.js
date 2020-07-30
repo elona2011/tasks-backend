@@ -74,7 +74,7 @@ router.post('/unifiedorder', async (ctx, next) => {
                     partnerId:mchid,
                     prepayId:obj.prepay_id,
                     packageValue:"Sign=WXPay",
-                    nonceStr: Math.random().toString(36).substring(2, 15),
+                    nonceStr: obj.nonce_str,
                     timeStamp: Math.floor(+new Date() / 1000) + "",
                 }
                 r.sign = sign(r)
