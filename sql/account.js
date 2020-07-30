@@ -11,23 +11,29 @@ let pool = mysql.createPool({
 })
 
 module.exports = {
-    addUser: tc(async (wx_openid, jwt, access_token,wx_openid_new) => {
+    addUser: tc(async (wx_openid, jwt, access_token, wx_openid_new) => {
         let insertId, r = await query(`select wx_openid from mydb.table_user where wx_openid=?`, [wx_openid])
         if (r.length) {
-            insertId = await queryTestAffectedRows(`update mydb.table_user set jwt=?,access_token=?,wx_openid_new=? where wx_openid=?`, [jwt, access_token,wx_openid_new, wx_openid])
+            insertId = await queryTestAffectedRows(`update mydb.table_user set jwt=?,access_token=?,wx_openid_new=? where wx_openid=?`, [jwt, access_token, wx_openid_new, wx_openid])
         } else {
-            insertId = await queryTestAffectedRows(`insert into mydb.table_user (wx_openid,jwt,access_token,wx_openid_new) values (?,?,?,?)`, [wx_openid, jwt, access_token,wx_openid_new])
+            insertId = await queryTestAffectedRows(`insert into mydb.table_user (wx_openid,jwt,access_token,wx_openid_new) values (?,?,?,?)`, [wx_openid, jwt, access_token, wx_openid_new])
         }
         return getOk(insertId)
     }),
-    async getToken(wx_openid) {
-        return new Promise((res, rej) => {
-            pool.query(`select jwt from table_user where wx_openid=?`, [wx_openid], function (error, results) {
-                if (error) rej(error);
-                res(results)
-            });
-        })
-    },
+    getValueByOpenid: tc(async (wx_openid, name) => {
+        let r = await queryTestLength(`select ${name} from table_user where wx_openid=?`, [wx_openid])
+        return r
+    }),
+    getToken: tc(async (wx_openid) => {
+        let r = await query(`select jwt from table_user where wx_openid=?`, [wx_openid])
+        return r
+        // return new Promise((res, rej) => {
+        //     pool.query(`select jwt from table_user where wx_openid=?`, [wx_openid], function (error, results) {
+        //         if (error) rej(error);
+        //         res(results)
+        //     });
+        // })
+    }),
     async verifyOpenid(wx_openid) {
         return new Promise((res, rej) => {
             pool.query(`select wx_openid from table_user where wx_openid=?`, [wx_openid], function (error, results) {

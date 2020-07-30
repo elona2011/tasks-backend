@@ -1,5 +1,5 @@
 const Router = require("@koa/router")
-const { getUserPay, getUserMoney, getUserPayDetail, saveUnifiedorder } = require('../sql/pay')
+const { getUserPay, getUserMoney, getUserPayDetail, getValueByOpenid } = require('../sql/pay')
 const setOpenid = require('../middleware/setOpenid')
 const { userPay, unifiedorder } = require('../services/pay')
 const { mch_appid } = require('../config')
@@ -26,9 +26,9 @@ router.post('/getUserPayDetail', async (ctx, next) => {
 })
 router.post('/getUserPay', async (ctx, next) => {
     console.log('/getUserPay', ctx.request.body)
-    // if (ctx.request.body.money_pay < 100) {
-    //     return ctx.body = getRes('moneySmaller')
-    // }
+    if (ctx.request.body.money_pay < 100) {
+        return ctx.body = getRes('moneySmaller')
+    }
     const moneyObj = await getUserMoney({
         wx_openid: ctx.openid,
     })
@@ -57,10 +57,11 @@ router.post('/getUserPay', async (ctx, next) => {
 
 router.post('/unifiedorder', async (ctx, next) => {
     console.log('/unifiedorder', ctx.request.body)
+    let r = await getValueByOpenid(ctx.openid,'wx_openid_new')
     await unifiedorder({
         total_fee: ctx.request.body.money,
         spbill_create_ip: ctx.req.connection.remoteAddress,
-        openid: ctx.openid,
+        openid: r.wx_openid_new,
     }).then(async res => {
         console.log(res)
         if (res.status == 200) {
