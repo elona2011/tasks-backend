@@ -1,5 +1,6 @@
 const Router = require("@koa/router")
-const { getUserPay, getUserMoney, getUserPayDetail, getValueByOpenid } = require('../sql/pay')
+const { getUserPay, getUserMoney, getUserPayDetail } = require('../sql/pay')
+const { getValueByOpenid } = require('../sql/account')
 const setOpenid = require('../middleware/setOpenid')
 const { userPay, unifiedorder } = require('../services/pay')
 const { mch_appid } = require('../config')
