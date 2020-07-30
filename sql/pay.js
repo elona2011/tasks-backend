@@ -84,7 +84,7 @@ module.exports = {
     },
     async saveUnifiedorder(obj) {
         return new Promise((res, rej) => {
-            pool.query(`select money from table_user where wx_openid=?`, [obj.openid], function (error, results) {
+            pool.query(`select money from table_user where wx_openid_new=?`, [obj.openid], function (error, results) {
                 if (error) rej(error);
                 if (results.length) {
                     let {
@@ -101,7 +101,7 @@ module.exports = {
                         console.log(results)
                         if (results.affectedRows == 1) {
                             if (obj.return_code == 'SUCCESS' && obj.result_code == 'SUCCESS') {
-                                pool.query(`update table_user set money=money+?,money_in=money_in+? where wx_openid=?`, [obj.cash_fee, obj.cash_fee, obj.openid], function (error, results) {
+                                pool.query(`update table_user set money=money+?,money_in=money_in+? where wx_openid_new=?`, [obj.cash_fee, obj.cash_fee, obj.openid], function (error, results) {
                                     if (error) {
                                         console.log(error)
                                         return rej(error);
