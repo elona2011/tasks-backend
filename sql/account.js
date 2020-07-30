@@ -1,6 +1,6 @@
 const { sql_user, sql_password } = require('../config')
 const mysql = require('mysql')
-const { query, queryTestLength, queryTestAffectedRows, tc } = require('./utils')
+const { query, queryTestLengthOne, queryTestAffectedRows, tc } = require('./utils')
 const { getOk, getRes } = require('../returnCode')
 
 let pool = mysql.createPool({
@@ -21,7 +21,7 @@ module.exports = {
         return getOk(insertId)
     }),
     getValueByOpenid: tc(async (wx_openid, name) => {
-        let r = await queryTestLength(`select ${name} from table_user where wx_openid=?`, [wx_openid])
+        let r = await queryTestLengthOne(`select ${name} from table_user where wx_openid=?`, [wx_openid])
         return r
     }),
     getToken: tc(async (wx_openid) => {

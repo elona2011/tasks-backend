@@ -69,6 +69,21 @@ module.exports = {
             })
         })
     },
+    queryTestLengthOne(sql, values) {
+        return new Promise((res, rej) => {
+            pool.query(sql, values, function (error, results) {
+                if (error) {
+                    console.log('sql error:', sql, values, error)
+                    return rej(error);
+                }
+                if (results.length!==1) {
+                    console.log('sql length!==1', sql, values)
+                    return rej(new Error(codes.selectNotFound))
+                }
+                res(results[0])
+            })
+        })
+    },
     queryTestAffectedRows(sql, values) {
         return new Promise((res, rej) => {
             pool.query(sql, values, function (error, results) {

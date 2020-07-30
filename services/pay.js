@@ -46,7 +46,7 @@ module.exports = {
             total_fee,
             spbill_create_ip,
             notify_url: `${hostname}/pay/wxpay`,
-            trade_type: 'JSAPI',
+            trade_type: 'APP',
             openid,
         }
         obj.sign = sign(obj)
