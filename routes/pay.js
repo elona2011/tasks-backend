@@ -70,12 +70,12 @@ router.post('/unifiedorder', async (ctx, next) => {
             console.log('obj', obj)
             if (obj.return_code == 'SUCCESS' && obj.result_code == 'SUCCESS') {
                 let r = {
-                    appId: mch_appid,
-                    partnerId:mchid,
-                    prepayId:obj.prepay_id,
-                    packageValue:"Sign=WXPay",
-                    nonceStr: obj.nonce_str,
-                    timeStamp: Math.floor(+new Date() / 1000) + "",
+                    appid: mch_appid,
+                    partnerid:mchid,
+                    prepayid:obj.prepay_id,
+                    package:"Sign=WXPay",
+                    noncestr: obj.nonce_str,
+                    timestamp: Math.floor(+new Date() / 1000) + "",
                 }
                 r.sign = sign(r)
                 console.log('r', r)
