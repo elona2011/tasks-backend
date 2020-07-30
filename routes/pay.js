@@ -3,7 +3,7 @@ const { getUserPay, getUserMoney, getUserPayDetail } = require('../sql/pay')
 const { getValueByOpenid } = require('../sql/account')
 const setOpenid = require('../middleware/setOpenid')
 const { userPay, unifiedorder } = require('../services/pay')
-const { mch_appid } = require('../config')
+const { mch_appid,mchid } = require('../config')
 const { getOk, getRes } = require('../returnCode')
 const { sign } = require('../services/sign')
 const { xml2js } = require('../services/xml')
@@ -71,12 +71,13 @@ router.post('/unifiedorder', async (ctx, next) => {
             if (obj.return_code == 'SUCCESS' && obj.result_code == 'SUCCESS') {
                 let r = {
                     appId: mch_appid,
-                    timeStamp: Math.floor(+new Date() / 1000) + "",
+                    partnerId:mchid,
+                    prepayId:obj.prepay_id,
+                    packageValue:"Sign=WXPay",
                     nonceStr: Math.random().toString(36).substring(2, 15),
-                    package: `prepay_id=${obj.prepay_id}`,
-                    signType: "MD5", //微信签名方式：
+                    timeStamp: Math.floor(+new Date() / 1000) + "",
                 }
-                r.paySign = sign(r)
+                r.sign = sign(r)
                 console.log('r', r)
                 ctx.body = getOk(r)
             }

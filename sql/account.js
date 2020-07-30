@@ -21,7 +21,7 @@ module.exports = {
         return getOk(insertId)
     }),
     getValueByOpenid: tc(async (wx_openid, name) => {
-        let r = await queryTestLengthOne(`select ${name} from table_user where wx_openid=?`, [wx_openid])
+        let r = await queryTestLengthOne(`select ${name} from mydb.table_user where wx_openid=?`, [wx_openid])
         return r
     }),
     getToken: tc(async (wx_openid) => {
