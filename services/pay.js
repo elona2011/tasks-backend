@@ -41,7 +41,7 @@ module.exports = {
             mch_id: mchid,
             device_info: 'WEB',
             nonce_str: Math.random().toString(36).substring(2, 15),
-            body: '测试页码-测试商品',
+            body: '老铁邦-建站任务',
             out_trade_no: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
             total_fee,
             spbill_create_ip,
