@@ -6,17 +6,21 @@ const path = require('path')
 const { img_dir } = require('../config')
 const { getOk, getRes } = require('../returnCode')
 const { dyAddTask } = require('../services/thirdpart/yl')
-const { getPureUrl,getVideoId } = require('../services/dy')
+const { getPureUrl, getVideoId } = require('../services/dy')
 
 const router = new Router({ prefix: '/api' });
 
 router.use(setOpenid)
-
-const getSplitNum = (totalNum) => {
+const minNum = {
+    '1090629': 50, //dy粉
+    '1042830': 10, //dy点赞
+    '1047669': 10   //dy comment
+}
+const getSplitNum = (totalNum, id) => {
     const remainNum = 10 //留给自己的任务
     let remoteNum = 0, localNum = totalNum
-    if (totalNum >= 50) {
-        remoteNum = (totalNum - remainNum < 50) ? 50 : (totalNum - remainNum);
+    if (totalNum >= minNum[id]) {
+        remoteNum = (totalNum - remainNum < minNum[id]) ? minNum[id] : (totalNum - remainNum);
         localNum = totalNum - remoteNum
     }
     return [localNum, remoteNum]
@@ -33,11 +37,11 @@ router.post('/publish', async (ctx, next) => {
         if (!pureUrl) {
             return getRes('UrlError')
         }
-        let followNumNew = getSplitNum(follow_num)
+        let followNumNew = getSplitNum(follow_num, '1090629')
         followNumNew[1] && dyAddTask('1090629', pureUrl, followNumNew[1])
-        let commentNumNew = getSplitNum(comment_num)
+        let commentNumNew = getSplitNum(comment_num, '1047669')
         commentNumNew[1] && dyAddTask('1047669', getVideoId(pureUrl), commentNumNew[1])
-        let thumbNumNew = getSplitNum(thumb_num)
+        let thumbNumNew = getSplitNum(thumb_num, '1042830')
         thumbNumNew[1] && dyAddTask('1042830', pureUrl, thumbNumNew[1])
 
         if (followNumNew[0] || commentNumNew[0] || thumbNumNew[0]) {
