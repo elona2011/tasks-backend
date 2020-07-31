@@ -5,26 +5,54 @@ const fs = require('fs')
 const path = require('path')
 const { img_dir } = require('../config')
 const { getOk, getRes } = require('../returnCode')
+const { dyAddTask } = require('../services/thirdpart/yl')
+const { getPureUrl,getVideoId } = require('../services/dy')
 
 const router = new Router({ prefix: '/api' });
 
 router.use(setOpenid)
 
+const getSplitNum = (totalNum) => {
+    const remainNum = 10 //留给自己的任务
+    let remoteNum = 0, localNum = totalNum
+    if (totalNum >= 50) {
+        remoteNum = (totalNum - remainNum < 50) ? 50 : (totalNum - remainNum);
+        localNum = totalNum - remoteNum
+    }
+    return [localNum, remoteNum]
+}
 router.post('/publish', async (ctx, next) => {
     console.log('/publish', ctx.request.body)
     if (ctx.request.body.type == 'dy') {
         let url = ctx.request.body.videoUrl.replace(/[\u{10000}-\u{10FFFF}]/gu, '')
-        ctx.body = await addPublish({
-            wx_openid: ctx.openid,
-            task_dywx: ctx.request.body.type,
-            url,
-            follow_num: ctx.request.body.follow,
-            follow_price: ctx.request.body.followPrice,
-            comment_num: ctx.request.body.comment,
-            comment_price: ctx.request.body.commentPrice,
-            thumb_num: ctx.request.body.thumb,
-            thumb_price: ctx.request.body.thumbPrice,
-        })
+        let follow_num = ctx.request.body.follow
+        let comment_num = ctx.request.body.comment
+        let thumb_num = ctx.request.body.thumb
+
+        let pureUrl = getPureUrl(url)
+        if (!pureUrl) {
+            return getRes('UrlError')
+        }
+        let followNumNew = getSplitNum(follow_num)
+        followNumNew[1] && dyAddTask('1090629', pureUrl, followNumNew[1])
+        let commentNumNew = getSplitNum(comment_num)
+        commentNumNew[1] && dyAddTask('1047669', getVideoId(pureUrl), commentNumNew[1])
+        let thumbNumNew = getSplitNum(thumb_num)
+        thumbNumNew[1] && dyAddTask('1042830', pureUrl, thumbNumNew[1])
+
+        if (followNumNew[0] || commentNumNew[0] || thumbNumNew[0]) {
+            ctx.body = await addPublish({
+                wx_openid: ctx.openid,
+                task_dywx: ctx.request.body.type,
+                url,
+                follow_num: followNumNew[0],
+                follow_price: ctx.request.body.followPrice,
+                comment_num: ctx.request.body.comment,
+                comment_price: ctx.request.body.commentPrice,
+                thumb_num: ctx.request.body.thumb,
+                thumb_price: ctx.request.body.thumbPrice,
+            })
+        }
     } else if (ctx.request.body.type == 'wx') {
         const file = ctx.request.files.imgCode;
         if (!file) {

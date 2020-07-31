@@ -9,8 +9,10 @@ module.exports = {
             moneyPayFail: 6,
             moneySmaller: 7,
             moneyNotEnough: 8,
+            taskNumNotEnough: 9,
             noFile: 20,
             typeErr: 40,
+            UrlError: 50,
             dbFail: 100,
             unknown: 999
         }
