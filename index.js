@@ -15,7 +15,6 @@ const { setMenu } = require('./services/wx')
 const { prdList } = require('./services/thirdpart/yl')
 // const {ocrTest} = require('./services/ocr')
 
-prdList()
 // ocrTest()
 // setMenu()
 initSql()
@@ -63,3 +62,4 @@ app.listen(port, function () {
     console.log("koa listen in 80")
 });
 
+prdList()
