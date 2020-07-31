@@ -11,16 +11,20 @@ const { getPureUrl, getVideoId } = require('../services/dy')
 const router = new Router({ prefix: '/api' });
 
 router.use(setOpenid)
-const minNum = {
-    '1090629': 50, //dy粉
-    '1042830': 10, //dy点赞
-    '1047669': 10   //dy comment
+const config = {
+    follow: [{ id: '1090629', min: 50 }],
+    thumb: [{ id: '1042830', min: 10 }],
+    comment: [{ id: '1047669', min: 10 }]
 }
-const getSplitNum = (totalNum, id) => {
+const followId = config.follow[0].id
+const thumbId = config.thumb[0].id
+const commentId = config.comment[0].id
+const getSplitNum = (totalNum, type) => {
+    const min = config[type][0].min
     const remainNum = 10 //留给自己的任务
     let remoteNum = 0, localNum = totalNum
-    if (totalNum >= minNum[id]) {
-        remoteNum = (totalNum - remainNum < minNum[id]) ? minNum[id] : (totalNum - remainNum);
+    if (totalNum >= min) {
+        remoteNum = (totalNum - remainNum < min) ? min : (totalNum - remainNum);
         localNum = totalNum - remoteNum
     }
     return [localNum, remoteNum]
@@ -32,17 +36,22 @@ router.post('/publish', async (ctx, next) => {
         let follow_num = ctx.request.body.follow
         let comment_num = ctx.request.body.comment
         let thumb_num = ctx.request.body.thumb
-
         let pureUrl = getPureUrl(url)
         if (!pureUrl) {
             return getRes('UrlError')
         }
-        let followNumNew = getSplitNum(follow_num, '1090629')
-        followNumNew[1] && dyAddTask('1090629', pureUrl, followNumNew[1])
-        let commentNumNew = getSplitNum(comment_num, '1047669')
-        commentNumNew[1] && dyAddTask('1047669', getVideoId(pureUrl), commentNumNew[1])
-        let thumbNumNew = getSplitNum(thumb_num, '1042830')
-        thumbNumNew[1] && dyAddTask('1042830', pureUrl, thumbNumNew[1])
+        let followNumNew = getSplitNum(follow_num, 'follow')
+        let commentNumNew = getSplitNum(comment_num, 'comment')
+        let thumbNumNew = getSplitNum(thumb_num, 'thumb')
+        if (commentNumNew[1]) {
+            getVideoId(pureUrl).then(videoId => {
+                console.log('videoId', videoId)
+                commentNumNew[1] && dyAddTask(commentId, videoId, commentNumNew[1])
+            })
+        }
+
+        followNumNew[1] && dyAddTask(followId, pureUrl, followNumNew[1])
+        thumbNumNew[1] && dyAddTask(thumbId, pureUrl, thumbNumNew[1])
 
         if (followNumNew[0] || commentNumNew[0] || thumbNumNew[0]) {
             ctx.body = await addPublish({
