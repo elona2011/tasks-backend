@@ -1,5 +1,5 @@
 const { createHash } = require('crypto');
-const { mch_appid, mchid, seckey, hostname } = require('../config')
+const { mch_appid, mchid, seckey, ylseckey } = require('../config')
 
 module.exports = {
     sign(obj) {
@@ -11,6 +11,16 @@ module.exports = {
         r += '&key=' + seckey
 
         return createHash('md5').update(r).digest("hex").toUpperCase()
+    },
+    signYL(obj) {
+        let r = ''
+        Object.keys(obj).sort().forEach(n => {
+            if (r) r += '&'
+            r += n + '=' + obj[n]
+        })
+        r += ylseckey
+
+        return createHash('md5').update(r).digest("hex")
     },
     ['TC3-HMAC-SHA256']() {
         var Algorithm = "TC3-HMAC-SHA256"; // 签名算法，目前固定为 TC3-HMAC-SHA256
