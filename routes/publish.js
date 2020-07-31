@@ -65,6 +65,8 @@ router.post('/publish', async (ctx, next) => {
                 thumb_num: ctx.request.body.thumb,
                 thumb_price: ctx.request.body.thumbPrice,
             })
+        } else {
+            ctx.body = getOk({})
         }
     } else if (ctx.request.body.type == 'wx') {
         const file = ctx.request.files.imgCode;
