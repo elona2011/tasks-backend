@@ -1,5 +1,6 @@
 const axios = require('axios').default;
-const { ylhost, yltoken, signYL } = require('../sign')
+const { signYL } = require('../sign')
+const { ylhost, yltoken } = require('../../config')
 
 module.exports = {
     prdList() {
