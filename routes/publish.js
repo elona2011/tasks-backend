@@ -12,7 +12,10 @@ const router = new Router({ prefix: '/api' });
 
 router.use(setOpenid)
 const config = {
-    follow: [{ id: '1090629', min: 50 }],
+    follow: [
+        { id: '1086273', min: 10, needVideoId: true },
+        { id: '1090629', min: 50, needVideoId: false },
+    ],
     thumb: [{ id: '1042830', min: 10 }],
     comment: [{ id: '1047669', min: 10 }]
 }
@@ -45,17 +48,28 @@ router.post('/publish', async (ctx) => {
         let thumbNumNew = getSplitNum(thumb_num, 'thumb')
 
         let retId = {}
-        if (commentNumNew[1]) {
-            let videoId = await getVideoId(pureUrl)
-            console.log('videoId', videoId)
-            retId.comment = await dyAddTask(commentId, videoId, commentNumNew[1])
-        }
-
-        if (followNumNew[1]) {
-            retId.follow = await dyAddTask(followId, pureUrl, followNumNew[1])
-        }
-        if (thumbNumNew[1]) {
-            retId.thumb = await dyAddTask(thumbId, pureUrl, thumbNumNew[1])
+        let videoId
+        try {
+            if (commentNumNew[1]) {
+                videoId = await getVideoId(pureUrl)
+                console.log('videoId', videoId)
+                retId.comment = await dyAddTask(commentId, videoId, commentNumNew[1])
+            }
+            if (followNumNew[1]) {
+                if (config.follow[0].needVideoId) {
+                    if (!videoId) {
+                        videoId = await getVideoId(pureUrl)
+                    }
+                    retId.follow = await dyAddTask(followId, videoId, followNumNew[1])
+                } else {
+                    retId.follow = await dyAddTask(followId, pureUrl, followNumNew[1])
+                }
+            }
+            if (thumbNumNew[1]) {
+                retId.thumb = await dyAddTask(thumbId, pureUrl, thumbNumNew[1])
+            }
+        } catch (error) {
+            return ctx.body = getRes('thirdPartyErr')
         }
 
         ctx.body = await addPublish({

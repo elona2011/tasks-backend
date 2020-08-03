@@ -14,6 +14,7 @@ module.exports = {
             typeErr: 40,
             UrlError: 50,
             dbFail: 100,
+            thirdPartyErr: 200,
             unknown: 999
         }
         return {
