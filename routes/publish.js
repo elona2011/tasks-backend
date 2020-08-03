@@ -139,15 +139,15 @@ router.post('/publishMy', async (ctx) => {
         let rr = await getTaskDetail(idsArr.join(','))
         r.forEach(n => {
             if (n.follow_num_ex) {
-                let task = rr.find(nn => nn.id === n.follow_id)
+                let task = rr.find(nn => nn.id === +n.follow_id)
                 n.follow_finish_num += task.now_num - task.start_num
             }
             if (n.thumb_num_ex) {
-                let task = rr.find(nn => nn.id === n.thumb_id)
+                let task = rr.find(nn => nn.id === +n.thumb_id)
                 n.thumb_finish_num += task.now_num - task.start_num
             }
             if (n.comment_num_ex) {
-                let task = rr.find(nn => nn.id === n.comment_id)
+                let task = rr.find(nn => nn.id === +n.comment_id)
                 n.comment_finish_num += task.now_num - task.start_num
             }
         })
