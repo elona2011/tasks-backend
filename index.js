@@ -12,7 +12,7 @@ const { initSql, routineCheck } = require('./sql')
 const response = require('./middleware/response')
 const mount = require('koa-mount');
 const { setMenu } = require('./services/wx')
-const { prdList } = require('./services/thirdpart/yl')
+const { prdList } = require('./interfaces/yl')
 // const {ocrTest} = require('./services/ocr')
 
 // ocrTest()

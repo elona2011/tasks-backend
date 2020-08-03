@@ -94,6 +94,38 @@ module.exports = {
                     columnName: 'qr_code',
                     columnType: 'varchar(100)'
                 })
+
+                //第三方订单id
+                addColumn({
+                    tableName: 'table_publish',
+                    columnName: 'follow_id',
+                    columnType: 'varchar(50)'
+                })
+                addColumn({
+                    tableName: 'table_publish',
+                    columnName: 'thumb_id',
+                    columnType: 'varchar(50)'
+                })
+                addColumn({
+                    tableName: 'table_publish',
+                    columnName: 'comment_id',
+                    columnType: 'varchar(50)'
+                })
+                addColumn({
+                    tableName: 'table_publish',
+                    columnName: 'follow_num_ex',
+                    columnType: 'int'
+                })
+                addColumn({
+                    tableName: 'table_publish',
+                    columnName: 'thumb_num_ex',
+                    columnType: 'int'
+                })
+                addColumn({
+                    tableName: 'table_publish',
+                    columnName: 'comment_num_ex',
+                    columnType: 'int'
+                })
             });
 
             pool.query(`create table if not exists table_task (\

@@ -12,24 +12,33 @@ pool = mysql.createPool({
 })
 
 module.exports = {
-    addPublish: tc(async (obj) => {
-        let money = obj.follow_price * obj.follow_num + obj.thumb_price * obj.thumb_num + obj.comment_price * obj.comment_num
-        let r = await query(`select wx_openid from mydb.table_user where wx_openid=? and money>=?`, [obj.wx_openid, money])
+    addPublish: tc(async ({ wx_openid, task_dywx, url, follow_num, follow_price, follow_num_ex, follow_id, comment_num, comment_price,
+        comment_num_ex, comment_id, thumb_num, thumb_price, thumb_num_ex, thumb_id, video_name, qr_code }) => {
+        let money = follow_price * follow_num + thumb_price * thumb_num + comment_price * comment_num
+        let r = await query(`select wx_openid from mydb.table_user where wx_openid=? and money>=?`, [wx_openid, money])
         if (r.length) {
-            let insertId = await queryTestAffectedRows(`insert into mydb.table_publish (wx_openid,money,task_dywx,url,video_name,qr_code,follow_num,follow_money,thumb_num,thumb_money,comment_num,comment_money) \
-                            values (?,?,?,?,?,?,?,?,?,?,?,?)`, [obj.wx_openid, money, obj.task_dywx, obj.url, obj.video_name, obj.qr_code, obj.follow_num, obj.follow_price, obj.thumb_num, obj.thumb_price, obj.comment_num, obj.comment_price])
+            let insertId = await queryTestAffectedRows(`insert into mydb.table_publish \
+            (wx_openid,money,task_dywx,url,video_name,qr_code,follow_num,follow_money,thumb_num,thumb_money,comment_num,comment_money,
+                follow_id,thumb_id,comment_id,follow_num_ex,thumb_num_ex,comment_num_ex) \
+                            values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+                [wx_openid, money, task_dywx, url, video_name, qr_code, follow_num, follow_price, thumb_num, thumb_price,
+                    comment_num, comment_price, follow_id, thumb_id, comment_id, follow_num_ex, thumb_num_ex, comment_num_ex])
 
-            await queryTestAffectedRows(`insert into mydb.table_task (wx_openid_publish,table_publish_id,task_money,task_dywx,task_url,task_type,task_num,video_name,qr_code) \
-                            values (?,?,?,?,?,'关注',?,?,?)`, [obj.wx_openid, insertId, obj.follow_price, obj.task_dywx, obj.url, obj.follow_num, obj.video_name, obj.qr_code])
-
-            await queryTestAffectedRows(`insert into mydb.table_task (wx_openid_publish,table_publish_id,task_money,task_dywx,task_url,task_type,task_num,video_name,qr_code) \
-                            values (?,?,?,?,?,'点赞',?,?,?)`, [obj.wx_openid, insertId, obj.thumb_price, obj.task_dywx, obj.url, obj.thumb_num, obj.video_name, obj.qr_code])
-
-            await queryTestAffectedRows(`insert into mydb.table_task (wx_openid_publish,table_publish_id,task_money,task_dywx,task_url,task_type,task_num,video_name,qr_code) \
-                            values (?,?,?,?,?,'评论',?,?,?)`, [obj.wx_openid, insertId, obj.comment_price, obj.task_dywx, obj.url, obj.comment_num, obj.video_name, obj.qr_code])
+            if (follow_num > follow_num_ex) {
+                await queryTestAffectedRows(`insert into mydb.table_task (wx_openid_publish,table_publish_id,task_money,task_dywx,task_url,task_type,task_num,video_name,qr_code) \
+                                        values (?,?,?,?,?,'关注',?,?,?)`, [wx_openid, insertId, follow_price, task_dywx, url, follow_num - follow_num_ex, video_name, qr_code])
+            }
+            if (thumb_num > thumb_num_ex) {
+                await queryTestAffectedRows(`insert into mydb.table_task (wx_openid_publish,table_publish_id,task_money,task_dywx,task_url,task_type,task_num,video_name,qr_code) \
+                            values (?,?,?,?,?,'点赞',?,?,?)`, [wx_openid, insertId, thumb_price, task_dywx, url, thumb_num - thumb_num_ex, video_name, qr_code])
+            }
+            if (comment_num > comment_num_ex) {
+                await queryTestAffectedRows(`insert into mydb.table_task (wx_openid_publish,table_publish_id,task_money,task_dywx,task_url,task_type,task_num,video_name,qr_code) \
+                            values (?,?,?,?,?,'评论',?,?,?)`, [wx_openid, insertId, comment_price, task_dywx, url, comment_num - comment_num_ex, video_name, qr_code])
+            }
 
             await queryTestAffectedRows(`update mydb.table_user set money=money-?,money_publish=money_publish+? \
-                            where wx_openid=? and money>=?`, [money, money, obj.wx_openid, money])
+                            where wx_openid=? and money>=?`, [money, money, wx_openid, money])
 
             return getOk({})
         } else {
@@ -38,6 +47,7 @@ module.exports = {
     }),
     publishMy: tc(async ({ wx_openid }) => {
         let r = await query(`select id,state,url,video_name,task_dywx,comment_num,comment_finish_num,follow_num,follow_finish_num,thumb_num,thumb_finish_num,\
+        follow_num_ex,thumb_num_ex,comment_num_ex,follow_id,thumb_id,comment_id,\
         (select count(*) from mydb.table_user_task where table_publish_id=a.id and task_state=2) as state2num from mydb.table_publish a where wx_openid=? `, [wx_openid])
         return getOk(r)
     }),
@@ -82,14 +92,26 @@ module.exports = {
     }),
     routineCheck: tc(async () => {
         console.log('routineCheck start:', new Date)
+        console.log('task_state=2')
         let r = await query('select id,wx_openid,table_task_id,table_publish_id,task_money,task_type from mydb.table_user_task where task_state=2 and create_time < NOW() - INTERVAL 1 DAY')
         if (r.length) {
             r.forEach(async n => {
-                await query(`update mydb.table_user_task set task_state=3 where id=${n.id}`)
+                await query(`update mydb.table_user_task set task_state=3 where id=?`, [n.id])
                 await queryTestAffectedRows(`update mydb.table_task set task_finish_num=task_finish_num+1 where id=?`, [n.table_task_id])
                 let name = getNameByType(n.task_type) + '_finish_num'
                 await queryTestAffectedRows(`update mydb.table_publish set ${name}=${name}+1 where id=?`, [n.table_publish_id])
                 await queryTestAffectedRows(`update mydb.table_user set money=money+? where wx_openid=?`, [n.task_money, n.wx_openid])
+            })
+        }
+
+        console.log('task_state=1')
+        r = await query('select id,wx_openid,table_task_id,table_publish_id,task_money,task_type from mydb.table_user_task where task_state=1 and create_time < NOW() - INTERVAL 1 DAY')
+        if (r.length) {
+            r.forEach(async n => {
+                await query(`delete from mydb.table_user_task where id=?`, [n.id])
+                await queryTestAffectedRows(`update mydb.table_task set task_used_num=task_used_num-1 where id=?`, [n.table_task_id])
+                let name = getNameByType(n.task_type) + '_doing_num'
+                await queryTestAffectedRows(`update mydb.table_publish set ${name}=${name}-1 where id=?`, [n.table_publish_id])
             })
         }
         console.log('routineCheck finish:', new Date)

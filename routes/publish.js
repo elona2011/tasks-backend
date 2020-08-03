@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const { img_dir } = require('../config')
 const { getOk, getRes } = require('../returnCode')
-const { dyAddTask } = require('../services/thirdpart/yl')
+const { dyAddTask, getTaskDetail } = require('../interfaces/yl')
 const { getPureUrl, getVideoId } = require('../services/dy')
 
 const router = new Router({ prefix: '/api' });
@@ -29,7 +29,7 @@ const getSplitNum = (totalNum, type) => {
     }
     return [localNum, remoteNum]
 }
-router.post('/publish', async (ctx, next) => {
+router.post('/publish', async (ctx) => {
     console.log('/publish', ctx.request.body)
     if (ctx.request.body.type == 'dy') {
         let url = ctx.request.body.videoUrl.replace(/[\u{10000}-\u{10FFFF}]/gu, '')
@@ -43,31 +43,38 @@ router.post('/publish', async (ctx, next) => {
         let followNumNew = getSplitNum(follow_num, 'follow')
         let commentNumNew = getSplitNum(comment_num, 'comment')
         let thumbNumNew = getSplitNum(thumb_num, 'thumb')
+
+        let retId = {}
         if (commentNumNew[1]) {
-            getVideoId(pureUrl).then(videoId => {
-                console.log('videoId', videoId)
-                commentNumNew[1] && dyAddTask(commentId, videoId, commentNumNew[1])
-            })
+            let videoId = await getVideoId(pureUrl)
+            console.log('videoId', videoId)
+            retId.comment = await dyAddTask(commentId, videoId, commentNumNew[1])
         }
 
-        followNumNew[1] && dyAddTask(followId, pureUrl, followNumNew[1])
-        thumbNumNew[1] && dyAddTask(thumbId, pureUrl, thumbNumNew[1])
-
-        if (followNumNew[0] || commentNumNew[0] || thumbNumNew[0]) {
-            ctx.body = await addPublish({
-                wx_openid: ctx.openid,
-                task_dywx: ctx.request.body.type,
-                url,
-                follow_num: followNumNew[0],
-                follow_price: ctx.request.body.followPrice,
-                comment_num: ctx.request.body.comment,
-                comment_price: ctx.request.body.commentPrice,
-                thumb_num: ctx.request.body.thumb,
-                thumb_price: ctx.request.body.thumbPrice,
-            })
-        } else {
-            ctx.body = getOk({})
+        if (followNumNew[1]) {
+            retId.follow = await dyAddTask(followId, pureUrl, followNumNew[1])
         }
+        if (thumbNumNew[1]) {
+            retId.thumb = await dyAddTask(thumbId, pureUrl, thumbNumNew[1])
+        }
+
+        ctx.body = await addPublish({
+            wx_openid: ctx.openid,
+            task_dywx: ctx.request.body.type,
+            url,
+            follow_num: ctx.request.body.follow,
+            follow_price: ctx.request.body.followPrice,
+            follow_num_ex: followNumNew[1],
+            follow_id: retId.follow,
+            comment_num: ctx.request.body.comment,
+            comment_price: ctx.request.body.commentPrice,
+            comment_num_ex: commentNumNew[1],
+            comment_id: retId.comment,
+            thumb_num: ctx.request.body.thumb,
+            thumb_price: ctx.request.body.thumbPrice,
+            thumb_num_ex: thumbNumNew[1],
+            thumb_id: retId.thumb,
+        })
     } else if (ctx.request.body.type == 'wx') {
         const file = ctx.request.files.imgCode;
         if (!file) {
@@ -103,14 +110,38 @@ router.post('/publish', async (ctx, next) => {
     }
 })
 
-router.post('/publishMy', async (ctx, next) => {
+router.post('/publishMy', async (ctx) => {
     console.log('/publishMy', ctx.request.body)
-    ctx.body = await publishMy({
+    let r = await publishMy({
         wx_openid: ctx.openid,
     })
+    let idsArr = []
+    r.forEach(n => {
+        if (n.follow_num_ex) idsArr.push(n.follow_id)
+        if (n.thumb_num_ex) idsArr.push(n.thumb_id)
+        if (n.comment_num_ex) idsArr.push(n.comment_id)
+    })
+    if (idsArr.length) {
+        let rr = await getTaskDetail(idsArr.join(','))
+        r.forEach(n => {
+            if (n.follow_num_ex) {
+                let task = rr.find(nn => nn.id === n.follow_id)
+                n.follow_finish_num += task.now_num - task.start_num
+            }
+            if (n.thumb_num_ex) {
+                let task = rr.find(nn => nn.id === n.thumb_id)
+                n.thumb_finish_num += task.now_num - task.start_num
+            }
+            if (n.comment_num_ex) {
+                let task = rr.find(nn => nn.id === n.comment_id)
+                n.comment_finish_num += task.now_num - task.start_num
+            }
+        })
+    }
+    ctx.body = r
 })
 
-router.post('/getPublishById', async (ctx, next) => {
+router.post('/getPublishById', async (ctx) => {
     console.log('/getPublishById', ctx.request.body)
     let result = await getPublishById({
         id: ctx.request.body.id,
