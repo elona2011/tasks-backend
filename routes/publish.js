@@ -138,7 +138,7 @@ router.post('/publishMy', async (ctx) => {
             }
         })
     }
-    ctx.body = r
+    ctx.body = getOk(r)
 })
 
 router.post('/getPublishById', async (ctx) => {

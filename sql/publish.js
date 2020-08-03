@@ -49,7 +49,7 @@ module.exports = {
         let r = await query(`select id,state,url,video_name,task_dywx,comment_num,comment_finish_num,follow_num,follow_finish_num,thumb_num,thumb_finish_num,\
         follow_num_ex,thumb_num_ex,comment_num_ex,follow_id,thumb_id,comment_id,\
         (select count(*) from mydb.table_user_task where table_publish_id=a.id and task_state=2) as state2num from mydb.table_publish a where wx_openid=? `, [wx_openid])
-        return getOk(r)
+        return r
     }),
     async getPublishById({ id, wx_openid }) {
         return new Promise((res, rej) => {
